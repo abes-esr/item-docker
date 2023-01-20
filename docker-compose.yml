@@ -1,0 +1,234 @@
+#
+# Ci-dessous la config qui permet de lancer item-docker
+#
+# Remarque: avant de lancer docker-compose up, il faut régler le fichier .env
+# en partant du fichier .env-dist qui donne les variables d'environnements
+# à personnaliser et des exemples de valeurs.
+#
+
+version: "3.5"
+
+services:
+
+  ####################################
+  # Interface utilisateur de item
+  # ----------------------------------
+  # (basé sur vuejs)
+  item-front:
+    image: abesesr/item:${ITEM_FRONT_VERSION}
+    container_name: item-front
+    restart: unless-stopped
+    environment:
+      ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
+    ports:
+      - ${ITEM_FRONT_HTTP_PORT}:80
+    depends_on:
+      - item-api
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
+      # pour que les mises à jour de cette image soient auto-déployées
+      # par watchtower cf docker-compose.watchtower.yml
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+
+
+
+  ############################
+  # item-api
+  # API de item
+  # (écrite en java spring boot)
+  item-api:
+    image: abesesr/item:${ITEM_API_VERSION}
+    container_name: item-api
+    restart: unless-stopped
+    volumes:
+      - ${ITEM_WEB_WORKDIR}:/workdir/
+    environment:
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
+      SPRING_PROFILES_ACTIVE: ${ITEM_API_SPRING_PROFILES_ACTIVE}
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
+      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
+      SUDOC_PORT : ${ITEM_SUDOC_PORT}
+      SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
+      APP_JWT_SECRET: ${ITEM_API_JWT_SECRET}
+    ports:
+      - ${ITEM_API_HTTP_PORT}:8082
+    depends_on:
+      - item-db
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées
+      # par watchtower cf docker-compose.watchtower.yml
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+
+
+  item-batch:
+    image: abesesr/item:${ITEM_BATCH_VERSION}
+    container_name: item-batch
+    restart: unless-stopped
+    volumes:
+      - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
+    environment:
+      ITEM_BATCH_AT_STARTUP: ${ITEM_BATCH_AT_STARTUP}
+      ITEM_BATCH_CRON_TRAITEMENT: ${ITEM_BATCH_CRON_TRAITEMENT}
+      ITEM_BATCH_CRON_STAT: ${ITEM_BATCH_CRON_STAT}
+      # Pour basculer sur bon application-xxx.properties préalablement embarqué
+      # dans le code ici:
+      # https://github.com/abes-esr/abes-hello-back/tree/develop/batch/src/main/resources/
+      SPRING_PROFILES_ACTIVE: ${ITEM_API_SPRING_PROFILES_ACTIVE}
+      # Pour surcharger les paramètres spring du application-xxx.properties
+      # ci-dessous via le système de .env de docker
+      # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
+      # pour la liste de tous les champs qu'on peut surcharger,
+      # voir le contenu des application-xxx.properties embarqués dans le code sources
+      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
+      SUDOC_PORT : ${ITEM_SUDOC_PORT}
+      SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+
+
+
+  ##############################
+  # item-db
+  # Base de données postgresql de item
+  item-db:
+    image: abesesr/postgres-fr_fr:14.3.0
+    container_name: item-db
+    restart: unless-stopped
+    environment:
+      # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
+      POSTGRES_DB: "item"
+      POSTGRES_USER: ${ITEM_DB_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+    volumes:
+      - ./volumes/item-db/pgdata/:/var/lib/postgresql/data/
+    labels:
+      # pour envoyer les logs dans le puits de log de l'abes
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
+
+
+
+  #################################
+  # item-db-adminer
+  # Interface d'admin de postgresql
+  item-db-adminer:
+    image: adminer:4.8.1
+    container_name: item-db-adminer
+    restart: unless-stopped
+    ports:
+      - ${ITEM_DB_ADMINER_HTTP_PORT}:8080
+    depends_on:
+      - item-db
+    environment:
+      ADMINER_DEFAULT_SERVER: "item-db"
+    logging:
+      driver: none # pas de log pour adminer pour ne pas polluer
+
+
+
+  #######################################
+  # item-db-dumper
+  # Dump de la base de données postgresql
+  # (dump tous les jours pour les sauvegardes)
+  # https://github.com/tiredofit/docker-db-backup
+  item-db-dumper:
+    image: tiredofit/db-backup:3.3.11
+    container_name: item-db-dumper
+    restart: unless-stopped
+    volumes:
+      - ./volumes/item-db/dump/:/backup/
+    depends_on:
+      - item-db
+    environment:
+      # DB_DUMP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
+      # DB_DUMP_FREQ: 1440 <= chaque jour
+      # DB_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
+      DB_TYPE: "pgsql"
+      DB_HOST: "item-db"
+      DB_NAME: "item"
+      DB_USER: ${ITEM_DB_POSTGRES_USER}
+      DB_PASS: ${ITEM_DB_POSTGRES_PASSWORD}
+      DB_DUMP_BEGIN: "0130"
+      DB_DUMP_FREQ: 1440
+      DB_CLEANUP_TIME: 10080
+      SPLIT_DB: "true"
+      COMPRESSION: "GZ"
+      DEBUG_MODE: "false"
+      CONTAINER_ENABLE_SCHEDULING: "false"
+      CONTAINER_ENABLE_MONITORING: "false"
+    labels:
+      - "co.elastic.logs/enabled=true"
+      - "co.elastic.logs/processors.add_fields.target="
+      - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
+      - "co.elastic.logs/processors.add_fields.fields.abes_middleware=adhoc"
+      # log multiline aussi pour ce conteneur avec des lignes qui ressemblent à ceci:
+      # 2022-08-01.14:55:00 [NOTICE] ** [db-backup] Dumping PostgresSQL database: 'item' and compressing with 'gzip'
+      - "co.elastic.logs/multiline.type=pattern"
+      - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
+      - "co.elastic.logs/multiline.negate=true"
+      - "co.elastic.logs/multiline.match=after"
+
+
+
+  #######################################
+  # item-watchtower
+  # Conteneur chargé de mettre à jour automatiquement toutes les N secondes
+  # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
+  # plus d'info : https://containrrr.dev/watchtower
+  # cf README.md pour explications : https://github.com/abes-esr/item-docker#d%C3%A9ploiement-continu
+  item-watchtower:
+    image: containrrr/watchtower:1.4.0
+    container_name: item-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_POLL_INTERVAL: 60
+      WATCHTOWER_DEBUG: "false"
+      WATCHTOWER_NO_STARTUP_MESSAGE: "true"
+      WATCHTOWER_WARN_ON_HEAD_FAILURE: "never"
+      WATCHTOWER_RUN_ONCE: ${ITEM_WATCHTOWER_RUN_ONCE}
+      WATCHTOWER_NOTIFICATIONS: "slack"
+      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${ITEM_WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL}
+      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: ${ITEM_WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER}
+      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notif-item"
+      WATCHTOWER_SCOPE: "item-watchtower-scope"
+    labels:
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+
+
+

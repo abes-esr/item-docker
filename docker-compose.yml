@@ -45,7 +45,7 @@ services:
     container_name: item-api
     restart: unless-stopped
     volumes:
-      - ${ITEM_WEB_WORKDIR}:/workdir/
+      - ${ITEM_API_WORKDIR}:/workdir/
     environment:
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:

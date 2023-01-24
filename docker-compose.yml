@@ -56,12 +56,12 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
-      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
-      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
-      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
-      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
-      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
@@ -100,12 +100,12 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
-      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
-      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
-      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
-      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
-      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
@@ -125,6 +125,8 @@ services:
     image: abesesr/postgres-fr_fr:14.3.0
     container_name: item-db
     restart: unless-stopped
+    ports:
+      - "5432:5432"
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"

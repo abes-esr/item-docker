@@ -87,6 +87,7 @@ services:
     restart: unless-stopped
     volumes:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
+      - ${ITEM_API_WORKDIR}:/workdir/
     environment:
       ITEM_BATCH_AT_STARTUP: ${ITEM_BATCH_AT_STARTUP}
       ITEM_BATCH_DEPLOY_CRON: ${ITEM_BATCH_DEPLOY_CRON}
@@ -126,8 +127,6 @@ services:
     image: abesesr/postgres-fr_fr:14.3.0
     container_name: item-db
     restart: unless-stopped
-    ports:
-      - "5432:5432"
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"

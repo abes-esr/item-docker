@@ -111,6 +111,8 @@ services:
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
+      BATCH_MIN_HOUR: ${ITEM_BATCH_MIN_HOUR}
+      BATCH_MAX_HOUR: ${ITEM_BATCH_MAX_HOUR}
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -127,6 +129,8 @@ services:
     image: abesesr/postgres-fr_fr:14.3.0
     container_name: item-db
     restart: unless-stopped
+    ports:
+            - 5432:5432
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"

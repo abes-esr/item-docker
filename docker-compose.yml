@@ -109,8 +109,8 @@ services:
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
-      BATCH_MIN_HOUR: ${ITEM_BATCH_MIN_HOUR}
-      BATCH_MAX_HOUR: ${ITEM_BATCH_MAX_HOUR}
+      BATCH_MIN_HOUR: ${BATCH_MIN_HOUR}
+      BATCH_MAX_HOUR: ${BATCH_MAX_HOUR}
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"

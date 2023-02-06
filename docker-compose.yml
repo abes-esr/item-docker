@@ -18,6 +18,7 @@ services:
     image: abesesr/item:${ITEM_FRONT_VERSION}
     container_name: item-front
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
     ports:
@@ -43,6 +44,7 @@ services:
     image: abesesr/item:${ITEM_API_VERSION}
     container_name: item-api
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ${ITEM_API_WORKDIR}:/workdir/
     environment:
@@ -83,6 +85,7 @@ services:
     image: abesesr/item:${ITEM_BATCH_VERSION}
     container_name: item-batch
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
       - ${ITEM_API_WORKDIR}:/workdir/
@@ -127,6 +130,7 @@ services:
     image: abesesr/postgres-fr_fr:14.3.0
     container_name: item-db
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     ports:
             - 5432:5432
     environment:
@@ -151,6 +155,7 @@ services:
   item-db-adminer:
     image: adminer:4.8.1
     container_name: item-db-adminer
+    mem_limit: ${MEM_LIMIT}
     restart: unless-stopped
     ports:
       - ${ITEM_DB_ADMINER_HTTP_PORT}:8080
@@ -172,6 +177,7 @@ services:
     image: tiredofit/db-backup:3.3.11
     container_name: item-db-dumper
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ./volumes/item-db/dump/:/backup/
     depends_on:
@@ -217,6 +223,7 @@ services:
     image: containrrr/watchtower:1.4.0
     container_name: item-watchtower
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

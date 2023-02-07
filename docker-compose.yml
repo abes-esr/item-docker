@@ -131,8 +131,6 @@ services:
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
-    ports:
-            - 5432:5432
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"

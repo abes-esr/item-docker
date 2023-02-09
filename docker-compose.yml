@@ -127,7 +127,7 @@ services:
   # item-db
   # Base de données postgresql de item
   item-db:
-    image: abesesr/postgres-fr_fr:14.3.0
+    image: abesesr/postgres-fr_fr:15.1.0
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}

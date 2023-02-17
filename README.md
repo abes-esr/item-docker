@@ -18,11 +18,11 @@ Les URLs correspondantes aux déploiements en local, dev, test et prod de item s
   - http://diplotaxis1-dev.v212.abes.fr:11082/ : URL interne de l'adminer
 - test :
   - http://diplotaxis1-test.v202.abes.fr:11080/ : URL interne de item-client
-  - http://diplotaxis1-test.v202.abes.fr:11081/api/v1/143519379 : URL interne de item-api
+  - http://diplotaxis1-test.v202.abes.fr:11081/ : URL interne de item-api
   - http://diplotaxis1-test.v202.abes.fr:11082/ : URL interne de l'adminer
 - prod
   - http://diplotaxis1-prod.v102.abes.fr:11080/ : URL interne de item-client
-  - http://diplotaxis1-prod.v102.abes.fr:11081/api/v1/143519379 : URL interne de item-api
+  - http://diplotaxis1-prod.v102.abes.fr:11081/ : URL interne de item-api
   - http://diplotaxis1-prod.v102.abes.fr:11082/ : URL interne de l'adminer
 
 ## Prérequis

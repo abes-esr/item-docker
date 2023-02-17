@@ -60,7 +60,6 @@ Pour information, une base de données postgresql vide sera alors automatiquemen
 docker-compose stop
 
 # pour redémarrer l'application
-cd /opt/pod/qualimarc-docker/
 docker-compose restart
 ```
 ## Supervision

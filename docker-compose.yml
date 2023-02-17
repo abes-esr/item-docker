@@ -18,6 +18,7 @@ services:
     image: abesesr/item:${ITEM_FRONT_VERSION}
     container_name: item-front
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
     ports:
@@ -30,8 +31,7 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
-      # pour que les mises à jour de cette image soient auto-déployées
-      # par watchtower cf docker-compose.watchtower.yml
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
@@ -44,6 +44,7 @@ services:
     image: abesesr/item:${ITEM_API_VERSION}
     container_name: item-api
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ${ITEM_API_WORKDIR}:/workdir/
     environment:
@@ -56,16 +57,16 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
-      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
-      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
-      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
-      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
-      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
-      APP_JWT_SECRET: ${ITEM_API_JWT_SECRET}
+      APP_JWTSECRET: ${ITEM_API_JWT_SECRET}
     ports:
       - ${ITEM_API_HTTP_PORT}:8082
     depends_on:
@@ -76,8 +77,7 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises à jour de cette image soient auto-déployées
-      # par watchtower cf docker-compose.watchtower.yml
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
@@ -85,10 +85,13 @@ services:
     image: abesesr/item:${ITEM_BATCH_VERSION}
     container_name: item-batch
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
+      - ${ITEM_API_WORKDIR}:/workdir/
     environment:
       ITEM_BATCH_AT_STARTUP: ${ITEM_BATCH_AT_STARTUP}
+      ITEM_BATCH_DEPLOY_CRON: ${ITEM_BATCH_DEPLOY_CRON}
       ITEM_BATCH_CRON_TRAITEMENT: ${ITEM_BATCH_CRON_TRAITEMENT}
       ITEM_BATCH_CRON_STAT: ${ITEM_BATCH_CRON_STAT}
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
@@ -100,15 +103,17 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_KOPYA_DATASOURCE_URL: 'jdbc:postgresql://item-db:5432/item'
-      SPRING_KOPYA_DATASOURCE_USERNAME: ${ITEM_DB_POSTGRES_USER}
-      SPRING_KOPYA_DATASOURCE_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
-      SPRING_BASEXML_DATASOURCE_URL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
-      SPRING_BASEXML_DATASOURCE_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
-      SPRING_BASEXML_DATASOURCE_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
+      SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
+      SPRING_DATASOURCE_BASEXML_USERNAME: ${ITEM_API_SPRING_BASEXML_DATASOURCE_USERNAME}
+      SPRING_DATASOURCE_BASEXML_PASSWORD: ${ITEM_API_SPRING_BASEXML_DATASOURCE_PASSWORD}
       SUDOC_SERVEUR: ${ITEM_SUDOC_SERVER}
       SUDOC_PORT : ${ITEM_SUDOC_PORT}
       SUDOC_LOGIN : ${ITEM_SUDOC_LOGIN}
+      BATCH_MIN_HOUR: ${BATCH_MIN_HOUR}
+      BATCH_MAX_HOUR: ${BATCH_MAX_HOUR}
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -122,9 +127,10 @@ services:
   # item-db
   # Base de données postgresql de item
   item-db:
-    image: abesesr/postgres-fr_fr:14.3.0
+    image: abesesr/postgres-fr_fr:15.1.0
     container_name: item-db
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"
@@ -147,6 +153,7 @@ services:
   item-db-adminer:
     image: adminer:4.8.1
     container_name: item-db-adminer
+    mem_limit: ${MEM_LIMIT}
     restart: unless-stopped
     ports:
       - ${ITEM_DB_ADMINER_HTTP_PORT}:8080
@@ -168,6 +175,7 @@ services:
     image: tiredofit/db-backup:3.3.11
     container_name: item-db-dumper
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - ./volumes/item-db/dump/:/backup/
     depends_on:
@@ -213,6 +221,7 @@ services:
     image: containrrr/watchtower:1.4.0
     container_name: item-watchtower
     restart: unless-stopped
+    mem_limit: ${MEM_LIMIT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

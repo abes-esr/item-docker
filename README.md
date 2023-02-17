@@ -1,3 +1,29 @@
+# item-docker
+
+[![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/item.svg)](https://hub.docker.com/r/abesesr/item/)
+
+Ce dépôt contient la configuration docker 🐳 pour déployer l'application item (cf sources de l'[api](https://github.com/abes-esr/item-api) et du [front](https://github.com/abes-esr/item-client)) en local sur le poste d'un développeur, ou bien sur les serveurs de dev, test et prod. 
+
+## URLs de item
+
+Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont les suivantes :
+
+- local :
+  - http://127.0.0.1:11080/ : URL interne de item-client
+  - http://127.0.0.1:11081/api/v1/143519379 : URL interne de item-api
+  - http://127.0.0.1:11082/ : URL interne de l'adminer
+- dev :
+  - http://diplotaxis1-dev.v212.abes.fr:11080/ : URL interne de item-client
+  - http://diplotaxis1-dev.v212.abes.fr:11081/ : URL interne de item-api
+  - http://diplotaxis1-dev.v212.abes.fr:11082/ : URL interne de l'adminer
+- test :
+  - http://diplotaxis1-test.v202.abes.fr:11080/ : URL interne de item-client
+  - http://diplotaxis1-test.v202.abes.fr:11081/api/v1/143519379 : URL interne de item-api
+  - http://diplotaxis1-test.v202.abes.fr:11082/ : URL interne de l'adminer
+- prod
+  - http://diplotaxis1-prod.v102.abes.fr:11080/ : URL interne de item-client
+  - http://diplotaxis1-prod.v102.abes.fr:11081/api/v1/143519379 : URL interne de item-api
+  - http://diplotaxis1-prod.v102.abes.fr:11082/ : URL interne de l'adminer
 
 ## Prérequis
 Disposer de :
@@ -12,7 +38,7 @@ Déployer la configuration docker dans un répertoire :
 
 # adaptez /opt/pod/ avec l'emplacement où vous souhaitez déployer l'application et cloner le projet
 
-git clone https://github.com/abes-esr/qualimarc-docker.git
+git clone https://github.com/abes-esr/item-docker.git
 ```
 Configurer l'application depuis l'exemple du [fichier ``.env-dist``](./.env-dist) (ce fichier contient la liste des variables avec des explications et des exemples de valeurs) :
 

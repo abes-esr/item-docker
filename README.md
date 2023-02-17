@@ -9,21 +9,21 @@ Ce dépôt contient la configuration docker 🐳 pour déployer l'application it
 Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont les suivantes :
 
 - local :
-  - http://127.0.0.1:11080/ : URL interne de item-client
-  - http://127.0.0.1:11081/api/v1/143519379 : URL interne de item-api
-  - http://127.0.0.1:11082/ : URL interne de l'adminer
+  - http://127.0.0.1:14080/ : URL interne de item-client
+  - http://127.0.0.1:14081/api/v1/143519379 : URL interne de item-api
+  - http://127.0.0.1:14082/ : URL interne de l'adminer
 - dev :
-  - http://diplotaxis1-dev.v212.abes.fr:11080/ : URL interne de item-client
-  - http://diplotaxis1-dev.v212.abes.fr:11081/ : URL interne de item-api
-  - http://diplotaxis1-dev.v212.abes.fr:11082/ : URL interne de l'adminer
+  - http://diplotaxis4-dev.v212.abes.fr:14080/ : URL interne de item-client
+  - http://diplotaxis4-dev.v212.abes.fr:14081/ : URL interne de item-api
+  - http://diplotaxis4-dev.v212.abes.fr:14082/ : URL interne de l'adminer
 - test :
-  - http://diplotaxis1-test.v202.abes.fr:11080/ : URL interne de item-client
-  - http://diplotaxis1-test.v202.abes.fr:11081/ : URL interne de item-api
-  - http://diplotaxis1-test.v202.abes.fr:11082/ : URL interne de l'adminer
+  - http://diplotaxis4-test.v202.abes.fr:14080/ : URL interne de item-client
+  - http://diplotaxis4-test.v202.abes.fr:14081/ : URL interne de item-api
+  - http://diplotaxis4-test.v202.abes.fr:14082/ : URL interne de l'adminer
 - prod
-  - http://diplotaxis1-prod.v102.abes.fr:11080/ : URL interne de item-client
-  - http://diplotaxis1-prod.v102.abes.fr:11081/ : URL interne de item-api
-  - http://diplotaxis1-prod.v102.abes.fr:11082/ : URL interne de l'adminer
+  - http://diplotaxis4-prod.v102.abes.fr:14080/ : URL interne de item-client
+  - http://diplotaxis4-prod.v102.abes.fr:14081/ : URL interne de item-api
+  - http://diplotaxis4-prod.v102.abes.fr:14082/ : URL interne de l'adminer
 
 ## Prérequis
 Disposer de :

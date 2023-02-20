@@ -10,7 +10,7 @@ Les URLs correspondantes aux déploiements en local, dev, test et prod de item s
 
 - local :
   - http://127.0.0.1:14080/ : URL interne de item-client
-  - http://127.0.0.1:14081/api/v1/143519379 : URL interne de item-api
+  - http://127.0.0.1:14081/ : URL interne de item-api
   - http://127.0.0.1:14082/ : URL interne de l'adminer
 - dev :
   - http://diplotaxis4-dev.v212.abes.fr:14080/ : URL interne de item-client

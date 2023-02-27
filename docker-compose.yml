@@ -177,7 +177,7 @@ services:
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     volumes:
-      - ./volumes/item-db/dump/:/backup/
+     - ${ITEM_DB_DUMP_WORKDIR}:/backup/
     depends_on:
       - item-db
     environment:

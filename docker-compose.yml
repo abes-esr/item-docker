@@ -6,6 +6,12 @@
 # à personnaliser et des exemples de valeurs.
 #
 
+#  PostgreSQL Database directory appears to contain a database; Skipping initialization
+#  2023-04-19T12:03:02.864012500Z
+# 2023-04-19T12:03:02.909911700Z 2023-04-19 12:03:02.909 UTC [1] FATAL:  les fichiers de la base de données sont incompatibles avec le serveur
+# 2023-04-19T12:03:02.909952600Z 2023-04-19 12:03:02.909 UTC [1] DÉTAIL:  Le répertoire des données a été initialisé avec PostgreSQL version 14,
+# 2023-04-19T12:03:02.909964000Z 	qui est non compatible avec cette version 15.1 (Debian 15.1-1.pgdg110+1).
+
 version: "3.5"
 
 services:
@@ -131,6 +137,8 @@ services:
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    ports:
+      - ${ITEM_DB_POSTGRES_EXTERNAL_PORT}:5432
     environment:
       # cf https://github.com/docker-library/docs/blob/master/postgres/README.md#environment-variables
       POSTGRES_DB: "item"

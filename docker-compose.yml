@@ -152,7 +152,8 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
-
+    ports:
+      - 5432:5432
 
 
   #################################
@@ -174,7 +175,7 @@ services:
 
 
 
-  #######################################
+  ######################################
   # item-db-dumper
   # Dump de la base de données postgresql
   # (dump tous les jours pour les sauvegardes)

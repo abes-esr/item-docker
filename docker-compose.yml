@@ -25,6 +25,7 @@ services:
     container_name: item-front
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     environment:
       ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
     ports:
@@ -51,6 +52,7 @@ services:
     container_name: item-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     volumes:
       - ${ITEM_API_WORKDIR}:/workdir/
     environment:
@@ -92,6 +94,7 @@ services:
     container_name: item-batch
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     volumes:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
       - ${ITEM_API_WORKDIR}:/workdir/
@@ -137,6 +140,7 @@ services:
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     ports:
       - ${ITEM_DB_POSTGRES_EXTERNAL_PORT}:5432
     environment:
@@ -163,6 +167,7 @@ services:
     image: adminer:4.8.1
     container_name: item-db-adminer
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     restart: unless-stopped
     ports:
       - ${ITEM_DB_ADMINER_HTTP_PORT}:8080
@@ -185,6 +190,7 @@ services:
     container_name: item-db-dumper
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     volumes:
      - ${ITEM_DB_DUMP_WORKDIR}:/backup/
     depends_on:
@@ -231,6 +237,7 @@ services:
     container_name: item-watchtower
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
+    cpu_limit: ${CPU_LIMIT}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     environment:

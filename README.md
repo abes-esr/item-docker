@@ -98,7 +98,7 @@ Les éléments suivants sont à sauvegarder:
 - ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item
 
 Le répertoire suivant est à exclure des sauvegardes :
-- ``volumes/item-db/pgdata/`` : contient les données binaires de la base de données postgresql item
+- ``/opt/pod/item-docker/volumes/item-db/pgdata/`` : contient les données binaires de la base de données postgresql item
 
 ### Restauration depuis une sauvegarde
 

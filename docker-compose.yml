@@ -156,8 +156,6 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
-    ports:
-      - 5432:5432
 
 
   #################################

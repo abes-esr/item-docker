@@ -148,6 +148,7 @@ services:
       POSTGRES_DB: "item"
       POSTGRES_USER: ${ITEM_DB_POSTGRES_USER}
       POSTGRES_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
+      c
     volumes:
       - ./volumes/item-db/pgdata/:/var/lib/postgresql/data/
     labels:

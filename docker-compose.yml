@@ -205,7 +205,6 @@ services:
       DEFAULT_BACKUP_BEGIN: "0130"
       DEFAULT_BACKUP_INTERVAL: 1440
       DEFAULT_CLEANUP_TIME: 10080
-      LOG_FILE: /backup/
       SPLIT_DB: "true"
       COMPRESSION: "GZ"
       DEBUG_MODE: "false"

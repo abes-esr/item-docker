@@ -192,7 +192,7 @@ services:
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     volumes:
-     - ${ITEM_DB_DUMP_WORKDIR}:/backup/
+     - ./volumes/item-db/dump/:/backup/
     depends_on:
       - item-db
     environment:

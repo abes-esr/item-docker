@@ -180,7 +180,7 @@ services:
   # (dump tous les jours pour les sauvegardes)
   # https://github.com/tiredofit/docker-db-backup
   item-db-dumper:
-    image: tiredofit/db-backup:3.3.11
+    image: tiredofit/db-backup:4.0.35
     container_name: item-db-dumper
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}

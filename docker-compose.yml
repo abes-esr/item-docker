@@ -193,6 +193,7 @@ services:
     cpus: ${CPU_LIMIT}
     volumes:
      - ./volumes/item-db/dump/:/backup/
+     - ./volumes/item-db-dumper/script/:/assets/scripts/post/:w
     depends_on:
       - item-db
     environment:
@@ -212,6 +213,9 @@ services:
       DEBUG_MODE: "false"
       CONTAINER_ENABLE_SCHEDULING: "false"
       CONTAINER_ENABLE_MONITORING: "false"
+      DEFAULT_POST_SCRIPT: /assets/scripts/post/script.sh
+      NOTIFICATION_SLACK_HOOK_URL: ${ITEM_DB_DUMPER_NOTIFICATION_SLACK_HOOK_URL}
+      NOTIFICATION_SLACK_IDENTIFIER: ${ITEM_DB_DUMPER_NOTIFICATION_SLACK_IDENTIFIER}
     labels:
       - "co.elastic.logs/enabled=true"
       - "co.elastic.logs/processors.add_fields.target="

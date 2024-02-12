@@ -25,7 +25,7 @@ HASH=${10}
 MOVE_EXIT_CODE=${11}
 
 # Construire le message JSON
-message="{\"text\":\"ATTENTION! le fichier : ${BACKUP_FILENAME} fait que ${BACKUP_FILESIZE} octets, la backup est sûrement VIDE.\",\"username\": \"${NOTIFICATION_SLACK_IDENTIFIER}\"}"
+message="{\"text\":\"ATTENTION! le fichier : ${BACKUP_FILENAME} ne fait que ${BACKUP_FILESIZE} octets, la backup est sûrement VIDE.\",\"username\": \"${NOTIFICATION_SLACK_IDENTIFIER}\"}"
 
 # Envoyer la notification à Slack si en dessous de 50bytes
 if [ $BACKUP_FILESIZE -lt 50 ];

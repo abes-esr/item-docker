@@ -12,18 +12,32 @@ Les URLs correspondantes aux déploiements en local, dev, test et prod de item s
   - http://127.0.0.1:14080/ : URL interne de item-client
   - http://127.0.0.1:14081/ : URL interne de item-api
   - http://127.0.0.1:14082/ : URL interne de l'adminer
+  - http://127.0.0.1:14083/ : Port ouvert pour la gestion de la BDD avec un client SQL
 - dev :
   - http://diplotaxis4-dev.v212.abes.fr:14080/ : URL interne de item-client
   - http://diplotaxis4-dev.v212.abes.fr:14081/ : URL interne de item-api
   - http://diplotaxis4-dev.v212.abes.fr:14082/ : URL interne de l'adminer
+  - http://diplotaxis4-dev.v212.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
 - test :
   - http://diplotaxis4-test.v202.abes.fr:14080/ : URL interne de item-client
   - http://diplotaxis4-test.v202.abes.fr:14081/ : URL interne de item-api
   - http://diplotaxis4-test.v202.abes.fr:14082/ : URL interne de l'adminer
+  - http://diplotaxis4-test.v202.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
 - prod
   - http://diplotaxis4-prod.v102.abes.fr:14080/ : URL interne de item-client
   - http://diplotaxis4-prod.v102.abes.fr:14081/ : URL interne de item-api
   - http://diplotaxis4-prod.v102.abes.fr:14082/ : URL interne de l'adminer
+  - http://diplotaxis4-prod.v102.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
+ 
+## Utilisation de DBeaver (client SQL) pour gérer les bases de données dans item sur le port 14083
+
+Le port 14083 sur l'environnement de dev, test, prod à été ouvert pour pouvoir gérer les bases de données d'item avec un client sql externe
+Exemple : pour DBeaver (Créer en haut à gauche une nouvelle connexion postgresql)
+- Host: diplotaxis4-test.v202.abes.fr
+- Port: 14083
+- Database: item
+- Nom d'utilisateur: celui qui est dans la variable ITEM_DB_POSTGRES_USER du fichier .env
+- Mot de passe: celui qui est dans la variable ITEM_DB_POSTGRES_PASSWORD du fichier .env
 
 ## Prérequis
 Disposer de :

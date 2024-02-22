@@ -109,7 +109,7 @@ Le fait de passer ``ITEM_WATCHTOWER_RUN_ONCE`` à false va faire en sorte d'exé
 
 Les éléments suivants sont à sauvegarder:
 - ``.env`` : contient la configuration spécifique de notre déploiement
-- ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item
+- ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item : pour pourvoir afficher les sauvegardes sur le serveur : ``sudo ls -ll dump``
 
 Le répertoire suivant est à exclure des sauvegardes :
 - ``/opt/pod/item-docker/volumes/item-db/pgdata/`` : contient les données binaires de la base de données postgresql item

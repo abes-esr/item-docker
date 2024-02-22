@@ -130,6 +130,10 @@ Restaurez ensuite le dernier dump de la base de données postgresql de item :
    ```bash
    docker exec -it item-db-dumper restore
    ```
+
+***Important : penser à supprimer le schema public de sa base de donnée et le recréer (avec un client sql), sinon la restoration échouera avec les contraintes de clés***
+
+   choisir sa backup, choisir P (Postgresql), choisir E (environment variable DB01_HOST), choisir F (Parses Filename DB Name), choisir E (Environment Variable DB01_USER), choisir E (Environment Variable DB01_PASS), choisir D (postgresql : 5432)
 - C'est bon, la base de données item est alors restaurée
 
 Lancez alors toute l'application item et vérifiez qu'elle fonctionne bien :

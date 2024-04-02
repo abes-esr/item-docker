@@ -118,7 +118,7 @@ Le répertoire suivant est à exclure des sauvegardes :
 
 Réinstallez l'application item depuis la [procédure d'installation ci-dessus](#installation)
 
-**Penser à supprimer le schéma de la base de donnée nommé public, puis le récréer, à l'aide un logiciel client sql ou autre**
+**Important : penser à supprimer le schema public de sa base de donnée et le recréer (avec un client sql), sinon la restoration échouera avec les contraintes de clés**
 
 Restaurez ensuite le dernier dump de la base de données postgresql de item :
 - récupérer le dernier dump généré par ``item-db-dumper`` depuis le système de sauvegarde (le fichier dump ressemble à ceci ``pgsql_item_item-db_20220801-143201.sql.gz``) et placez le fichier dump récupéré (sans le décompresser) dans ``=volumes/item-db/dump/`` sur la machine qui doit faire repartir item

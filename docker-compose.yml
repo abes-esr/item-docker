@@ -56,6 +56,10 @@ services:
     volumes:
       - ${ITEM_API_WORKDIR}:/workdir/
     environment:
+      TZ: Europe/Paris
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Europe/Paris
+      # Commande pour les logs (ne pas utiliser l'option timestamp donnera l'heure -2)
+      # sudo docker-compose logs --follow --tail 0 item-api
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/web/src/main/resources/
@@ -99,6 +103,9 @@ services:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
       - ${ITEM_API_WORKDIR}:/workdir/
     environment:
+      TZ: Europe/Paris
+      JAVA_TOOL_OPTIONS: -Duser.timezone=Europe/Paris
+      # sudo docker-compose logs --follow --tail 0 item-batch
       ITEM_BATCH_AT_STARTUP: ${ITEM_BATCH_AT_STARTUP}
       ITEM_BATCH_DEPLOY_CRON: ${ITEM_BATCH_DEPLOY_CRON}
       ITEM_BATCH_CRON_TRAITEMENT: ${ITEM_BATCH_CRON_TRAITEMENT}

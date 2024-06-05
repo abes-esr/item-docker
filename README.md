@@ -152,4 +152,9 @@ Le ``pull`` aura pour effet de télécharger l'éventuelle dernière images dock
 
 Ou bien [lancer le conteneur ``item-watchtower``](https://github.com/abes-esr/item-docker/blob/develop/README.md#d%C3%A9ploiement-continu) qui le fera automatiquement toutes les quelques secondes pour vous.
 
+### Paramétrage de l'heure du serveur pour les logs
+
+Suivre les consignes ci-dessous pour obtenir la bonne heure dans le batch d'item et le web d'item
+
+![Sans titre](https://github.com/abes-esr/item-docker/assets/19894885/41ab2653-bf63-4b94-bf70-09b309facbac)
 

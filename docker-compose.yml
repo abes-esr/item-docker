@@ -156,7 +156,11 @@ services:
       POSTGRES_USER: ${ITEM_DB_POSTGRES_USER}
       POSTGRES_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
       logging_collector: 'mod'
-      log_statement: 'all'
+      log_statement: 'ddl'
+      # 'none' : aucune instruction n'est loggée
+      # 'ddl' : logue les instructions qui modifient le schéma (CREATE, ALTER, DROP, etc.)
+      # 'mod' : logue les instructions DDL ainsi que les INSERT, UPDATE, DELETE, TRUNCATE, COPY
+      # 'all' : logue toutes les instructions
     volumes:
       - ./volumes/item-db/pgdata/:/var/lib/postgresql/data/
     labels:

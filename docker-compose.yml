@@ -20,7 +20,7 @@ services:
   # Interface utilisateur de item
   # ----------------------------------
   # (basé sur vuejs)
-  item-front:
+  item-old-front:
     image: abesesr/item:${ITEM_FRONT_VERSION}
     container_name: item-front
     restart: unless-stopped
@@ -47,7 +47,7 @@ services:
   # item-api
   # API de item
   # (écrite en java spring boot)
-  item-api:
+  item-old-api:
     image: abesesr/item:${ITEM_API_VERSION}
     container_name: item-api
     restart: unless-stopped
@@ -95,7 +95,7 @@ services:
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
-  item-batch:
+  item-old-batch:
     image: abesesr/item:${ITEM_BATCH_VERSION}
     container_name: item-batch
     restart: unless-stopped
@@ -146,7 +146,7 @@ services:
   ##############################
   # item-db
   # Base de données postgresql de item
-  item-db:
+  item-old-db:
     image: abesesr/postgres-fr_fr:15.1.0
     container_name: item-db
     restart: unless-stopped
@@ -178,7 +178,7 @@ services:
   #################################
   # item-db-adminer
   # Interface d'admin de postgresql
-  item-db-adminer:
+  item-old-db-adminer:
     image: adminer:4.8.1
     container_name: item-db-adminer
     mem_limit: ${MEM_LIMIT}
@@ -200,7 +200,7 @@ services:
   # Dump de la base de données postgresql
   # (dump tous les jours pour les sauvegardes)
   # https://github.com/tiredofit/docker-db-backup
-  item-db-dumper:
+  item-old-db-dumper:
     image: tiredofit/db-backup:4.0.35
     container_name: item-db-dumper
     restart: unless-stopped
@@ -250,7 +250,7 @@ services:
   # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
   # plus d'info : https://containrrr.dev/watchtower
   # cf README.md pour explications : https://github.com/abes-esr/item-docker#d%C3%A9ploiement-continu
-  item-watchtower:
+  item-old-watchtower:
     image: containrrr/watchtower:1.4.0
     container_name: item-watchtower
     restart: unless-stopped

@@ -22,7 +22,7 @@ services:
   # (basé sur vuejs)
   item-old-front:
     image: abesesr/item:${ITEM_FRONT_VERSION}
-    container_name: item-front
+    container_name: item-old-front
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -31,7 +31,7 @@ services:
     ports:
       - ${ITEM_FRONT_HTTP_PORT}:80
     depends_on:
-      - item-api
+      - item-old-api
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -49,7 +49,7 @@ services:
   # (écrite en java spring boot)
   item-old-api:
     image: abesesr/item:${ITEM_API_VERSION}
-    container_name: item-api
+    container_name: item-old-api
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -84,7 +84,7 @@ services:
     ports:
       - ${ITEM_API_HTTP_PORT}:8082
     depends_on:
-      - item-db
+      - item-old-db
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -97,7 +97,7 @@ services:
 
   item-old-batch:
     image: abesesr/item:${ITEM_BATCH_VERSION}
-    container_name: item-batch
+    container_name: item-old-batch
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -148,7 +148,7 @@ services:
   # Base de données postgresql de item
   item-old-db:
     image: abesesr/postgres-fr_fr:15.1.0
-    container_name: item-db
+    container_name: item-old-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -180,14 +180,14 @@ services:
   # Interface d'admin de postgresql
   item-old-db-adminer:
     image: adminer:4.8.1
-    container_name: item-db-adminer
+    container_name: item-old-db-adminer
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     restart: unless-stopped
     ports:
       - ${ITEM_DB_ADMINER_HTTP_PORT}:8080
     depends_on:
-      - item-db
+      - item-old-db
     environment:
       ADMINER_DEFAULT_SERVER: "item-db"
     logging:
@@ -202,7 +202,7 @@ services:
   # https://github.com/tiredofit/docker-db-backup
   item-old-db-dumper:
     image: tiredofit/db-backup:4.0.35
-    container_name: item-db-dumper
+    container_name: item-old-db-dumper
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -210,7 +210,7 @@ services:
      - ./volumes/item-db/dump/:/backup/
      - ./volumes/item-db-dumper/script/:/assets/scripts/post/
     depends_on:
-      - item-db
+      - item-old-db
     environment:
       # DB_DUMP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
       # DB_DUMP_FREQ: 1440 <= chaque jour
@@ -252,7 +252,7 @@ services:
   # cf README.md pour explications : https://github.com/abes-esr/item-docker#d%C3%A9ploiement-continu
   item-old-watchtower:
     image: containrrr/watchtower:1.4.0
-    container_name: item-watchtower
+    container_name: item-old-watchtower
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}

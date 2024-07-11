@@ -69,7 +69,7 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-old-db:5432/item'
       SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
       SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
       SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
@@ -121,7 +121,7 @@ services:
       # https://www.linkedin.com/pulse/externalizing-properties-spring-boot-application-docker-phani-bushan
       # pour la liste de tous les champs qu'on peut surcharger,
       # voir le contenu des application-xxx.properties embarqués dans le code sources
-      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-db:5432/item'
+      SPRING_DATASOURCE_ITEM_JDBCURL: 'jdbc:postgresql://item-old-db:5432/item'
       SPRING_DATASOURCE_ITEM_USERNAME: ${ITEM_DB_POSTGRES_USER}
       SPRING_DATASOURCE_ITEM_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
       SPRING_DATASOURCE_BASEXML_JDBCURL: ${ITEM_API_SPRING_BASEXML_DATASOURCE_URL}
@@ -144,7 +144,7 @@ services:
 
 
   ##############################
-  # item-db
+  # item-old-db
   # Base de données postgresql de item
   item-old-db:
     image: abesesr/postgres-fr_fr:15.1.0
@@ -166,7 +166,7 @@ services:
       # 'mod' : logue les instructions DDL ainsi que les INSERT, UPDATE, DELETE, TRUNCATE, COPY
       # 'all' : logue toutes les instructions
     volumes:
-      - ./volumes/item-db/pgdata/:/var/lib/postgresql/data/
+      - ./volumes/item-old-db/pgdata/:/var/lib/postgresql/data/
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"
@@ -176,7 +176,7 @@ services:
 
 
   #################################
-  # item-db-adminer
+  # item-old-db-adminer
   # Interface d'admin de postgresql
   item-old-db-adminer:
     image: adminer:4.8.1
@@ -189,14 +189,14 @@ services:
     depends_on:
       - item-old-db
     environment:
-      ADMINER_DEFAULT_SERVER: "item-db"
+      ADMINER_DEFAULT_SERVER: "item-old-db"
     logging:
       driver: none # pas de log pour adminer pour ne pas polluer
 
 
 
   ######################################
-  # item-db-dumper
+  # item-old-db-dumper
   # Dump de la base de données postgresql
   # (dump tous les jours pour les sauvegardes)
   # https://github.com/tiredofit/docker-db-backup
@@ -207,8 +207,8 @@ services:
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
     volumes:
-     - ./volumes/item-db/dump/:/backup/
-     - ./volumes/item-db-dumper/script/:/assets/scripts/post/
+     - ./volumes/item-old-db/dump/:/backup/
+     - ./volumes/item-old-db-dumper/script/:/assets/scripts/post/
     depends_on:
       - item-old-db
     environment:
@@ -216,7 +216,7 @@ services:
       # DB_DUMP_FREQ: 1440 <= chaque jour
       # DB_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
       DB_TYPE: "pgsql"
-      DB_HOST: "item-db"
+      DB_HOST: "item-old-db"
       DB_NAME: "item"
       DB_USER: ${ITEM_DB_POSTGRES_USER}
       DB_PASS: ${ITEM_DB_POSTGRES_PASSWORD}

@@ -28,6 +28,7 @@ services:
     cpus: ${CPU_LIMIT}
     environment:
       ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
+      ITEM_FRONT_IDREF_API_URL: ${ITEM_FRONT_IDREF_API_URL}
     ports:
       - ${ITEM_FRONT_HTTP_PORT}:80
     depends_on:

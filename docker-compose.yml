@@ -141,6 +141,8 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
 
@@ -162,6 +164,7 @@ services:
       POSTGRES_PASSWORD: ${ITEM_DB_POSTGRES_PASSWORD}
       logging_collector: 'mod'
       log_statement: 'ddl'
+
       # 'none' : aucune instruction n'est loggée
       # 'ddl' : logue les instructions qui modifient le schéma (CREATE, ALTER, DROP, etc.)
       # 'mod' : logue les instructions DDL ainsi que les INSERT, UPDATE, DELETE, TRUNCATE, COPY
@@ -174,6 +177,8 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
   #################################
@@ -193,6 +198,9 @@ services:
       ADMINER_DEFAULT_SERVER: "item-db"
     logging:
       driver: none # pas de log pour adminer pour ne pas polluer
+    labels:
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
 
@@ -242,6 +250,8 @@ services:
       - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
       - "co.elastic.logs/multiline.negate=true"
       - "co.elastic.logs/multiline.match=after"
+      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
 

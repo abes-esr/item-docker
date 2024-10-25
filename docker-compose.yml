@@ -111,8 +111,6 @@ services:
       # sudo docker-compose logs --follow --tail 0 item-batch
       ITEM_BATCH_AT_STARTUP: ${ITEM_BATCH_AT_STARTUP}
       ITEM_BATCH_DEPLOY_CRON: ${ITEM_BATCH_DEPLOY_CRON}
-      ITEM_BATCH_CRON_TRAITEMENT: ${ITEM_BATCH_CRON_TRAITEMENT}
-      ITEM_BATCH_CRON_STAT: ${ITEM_BATCH_CRON_STAT}
       # Pour basculer sur bon application-xxx.properties préalablement embarqué
       # dans le code ici:
       # https://github.com/abes-esr/abes-hello-back/tree/develop/batch/src/main/resources/

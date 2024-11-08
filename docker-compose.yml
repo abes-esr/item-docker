@@ -12,7 +12,6 @@
 # 2023-04-19T12:03:02.909952600Z 2023-04-19 12:03:02.909 UTC [1] DÉTAIL:  Le répertoire des données a été initialisé avec PostgreSQL version 14,
 # 2023-04-19T12:03:02.909964000Z 	qui est non compatible avec cette version 15.1 (Debian 15.1-1.pgdg110+1).
 
-version: "3.5"
 
 services:
 

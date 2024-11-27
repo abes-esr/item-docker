@@ -28,6 +28,7 @@ services:
     environment:
       ITEM_FRONT_API_BASEURL: ${ITEM_FRONT_API_BASEURL}
       ITEM_FRONT_IDREF_API_URL: ${ITEM_FRONT_IDREF_API_URL}
+      ITEM_FRONT_MAINTENANCE: ${ITEM_FRONT_MAINTENANCE}
     ports:
       - ${ITEM_FRONT_HTTP_PORT}:80
     depends_on:

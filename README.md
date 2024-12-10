@@ -136,7 +136,7 @@ Donc pour changer l'heure de sauvegarde, il vous suffit de modifier cette valeur
 - se connecter au diplotaxis cible
 - Se rendre dans le repertoire /opt/pod
 - git clone https://github.com/abes-esr/item-docker.git
-- récuperer le .env sur (voir avec JGT)
+- récuperer le .env (s'adresser au SIAT)
 - le déposer dans le repertoire crée item-docker
 - lancer la construction des containers à partir des images avec : docker compose up -d
 

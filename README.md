@@ -108,7 +108,7 @@ Le fait de passer ``ITEM_WATCHTOWER_RUN_ONCE`` à false va faire en sorte d'exé
 ## Sauvegardes
 
 Les éléments suivants sont à sauvegarder:
-- ``.env`` : contient la configuration spécifique de notre déploiement. Il doit être restauré et non crée depuis le .env-dist qui est généré à partir de la commande docker pull.
+- ``.env`` : contient la configuration spécifique de notre déploiement. Il doit être restauré et non crée depuis le .env-dist qui est généré à partir de la commande git clone du depot ou git pull
 NOTE: à voir avec JGT pour un emplacement dédié pour la récupération d'un .env à jour.
 - ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item : pour pourvoir afficher les sauvegardes sur le serveur : ``sudo ls -ll dump``
 

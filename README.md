@@ -109,10 +109,27 @@ Le fait de passer ``ITEM_WATCHTOWER_RUN_ONCE`` à false va faire en sorte d'exé
 
 Les éléments suivants sont à sauvegarder:
 - ``.env`` : contient la configuration spécifique de notre déploiement. Il doit être restauré et non crée depuis le .env-dist qui est généré à partir de la commande docker pull.
+NOTE: à voir avec JGT pour un emplacement dédié pour la récupération d'un .env à jour.
 - ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item : pour pourvoir afficher les sauvegardes sur le serveur : ``sudo ls -ll dump``
 
 Le répertoire suivant est à exclure des sauvegardes :
 - ``/opt/pod/item-docker/volumes/item-db/pgdata/`` : contient les données binaires de la base de données postgresql item
+
+L'heure journalière de sauvegarde:
+Aller éditer dans le fichier
+> docker-compose.yml
+situé chaque diplotaxis à l'emplacement
+> /opt/pod/item-docker
+elle est définie à travers l'image
+- item-db-dumper
+et son paramètre:
+DEFAULT_BACKUP_BEGIN: "0130"
+Cette valeur "0130" indique que la sauvegarde des dumps démarre tous les jours à 1h30 du matin, heure GMT.
+Le format utilisé est "HHmm", où :
+- "HH" représente les heures sur 2 chiffres (de 00 à 23)
+- "mm" représente les minutes sur 2 chiffres (de 00 à 59)
+
+Donc pour changer l'heure de sauvegarde, il vous suffit de modifier cette valeur en respectant ce format.
 
 ### Restauration depuis une sauvegarde
 

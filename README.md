@@ -133,9 +133,23 @@ Donc pour changer l'heure de sauvegarde, il vous suffit de modifier cette valeur
 
 ### Restauration depuis une sauvegarde
 
-Réinstallez l'application item depuis la [procédure d'installation ci-dessus](#installation)
+- se connecter au diplotaxis cible
+- Se rendre dans le repertoire /opt/pod
+- git clone https://github.com/abes-esr/item-docker.git
+- récuperer le .env sur (voir avec JGT)
+- le déposer dans le repertoire crée item-docker
+- lancer la construction des containers à partir des images avec : docker compose up -d
 
-**Important : penser à supprimer le schema public de sa base de donnée et le recréer (avec un client sql), sinon la restoration échouera avec les contraintes de clés**
+Remarque : retirer le ``-d`` pour voir passer les logs dans le terminal et utiliser alors CTRL+C pour stopper l'application
+
+Pour information, une base de données postgresql vide sera alors automatiquement initialisée. Ses données binaires seront placées dans le répertoire persistant suivante (attention le user unix de ce répertoire est celui du conteneur postgresql qui n'est pas le même que celui que vous utilisez pour installer l'application) : ``volumes/item-db/pgdata/``
+```bash
+# pour stopper l'application
+docker-compose stop
+
+# pour redémarrer l'application
+docker-compose restart
+```
 
 Restaurez ensuite le dernier dump de la base de données postgresql de item :
 - récupérer le dernier dump généré par ``item-db-dumper`` depuis le système de sauvegarde (le fichier dump ressemble à ceci ``pgsql_item_item-db_20220801-143201.sql.gz``) et placez le fichier dump récupéré (sans le décompresser) dans ``=volumes/item-db/dump/`` sur la machine qui doit faire repartir item
@@ -150,7 +164,7 @@ Restaurez ensuite le dernier dump de la base de données postgresql de item :
 
 ***Important : penser à supprimer le schema public de sa base de donnée et le recréer (avec un client sql), sinon la restoration échouera avec les contraintes de clés***
 
-   choisir sa backup, choisir P (Postgresql), choisir E (environment variable DB01_HOST), choisir F (Parses Filename DB Name), choisir E (Environment Variable DB01_USER), choisir E (Environment Variable DB01_PASS), choisir D (postgresql : 5432)
+   choisir sa backup, choisir P (Postgresql), choisir F (Parses Filename DB Name), choisir E (Environment Variable DB01_USER), choisir E (Environment Variable DB01_PASS), choisir D (postgresql : 5432)
 - C'est bon, la base de données item est alors restaurée
 
 Lancez alors toute l'application item et vérifiez qu'elle fonctionne bien :

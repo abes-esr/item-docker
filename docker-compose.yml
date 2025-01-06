@@ -103,6 +103,8 @@ services:
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
+    depends_on:
+      - item-api
     volumes:
       - ${ITEM_BATCH_STAT_WORKDIR}:/stat/
       - ${ITEM_API_WORKDIR}:/workdir/

@@ -135,6 +135,7 @@ services:
       SUDOC_PASS : ${ITEM_SUDOC_PASSWORD}
       BATCH_MIN_HOUR: ${BATCH_MIN_HOUR}
       BATCH_MAX_HOUR: ${BATCH_MAX_HOUR}
+      URL_BACK: "http://item-api:8082/api/v1"
     labels:
       # pour envoyer les logs dans le puits de log de l'abes
       - "co.elastic.logs/enabled=true"

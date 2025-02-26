@@ -2,11 +2,11 @@
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/abesesr/item.svg)](https://hub.docker.com/r/abesesr/item/)
 
-Ce dépôt contient la configuration docker 🐳 pour déployer l'application item (cf sources de l'[api](https://github.com/abes-esr/item-api) et du [front](https://github.com/abes-esr/item-client)) en local sur le poste d'un développeur, ou bien sur les serveurs de dev, test et prod. 
+Ce dépôt contient la configuration docker 🐳 pour déployer l'application Item (cf sources de l'[api](https://github.com/abes-esr/item-api) et du [front](https://github.com/abes-esr/item-client)) en local sur le poste d'un développeur ou sur les serveurs de dev, test et prod. 
 
-## URLs de item
+# URLs de item
 
-Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont les suivantes :
+Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont :
 
 - local :
   - http://127.0.0.1:14080/ : URL interne de item-client
@@ -29,68 +29,70 @@ Les URLs correspondantes aux déploiements en local, dev, test et prod de item s
   - http://diplotaxis4-prod.v102.abes.fr:14082/ : URL interne de l'adminer
   - http://diplotaxis4-prod.v102.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
  
-## Utilisation de DBeaver (client SQL) pour gérer les bases de données dans item sur le port 14083
+# Utilisation de DBeaver (client SQL) pour gérer les bases de données dans Item sur le port 14083
 
-Le port 14083 sur l'environnement de dev, test, prod à été ouvert pour pouvoir gérer les bases de données d'item avec un client sql externe
-Exemple : pour DBeaver (Créer en haut à gauche une nouvelle connexion postgresql)
+Le port 14083 est ouvert sur les environnements de développement, de test et de production afin de permettre la gestion des bases de données d'Item via un client SQL externe.
+Par exemple, avec DBeaver, il est possible de créer une nouvelle connexion : 
+
 - Host: diplotaxis4-test.v202.abes.fr
 - Port: 14083
 - Database: item
-- Nom d'utilisateur: celui qui est dans la variable ITEM_DB_POSTGRES_USER du fichier .env
-- Mot de passe: celui qui est dans la variable ITEM_DB_POSTGRES_PASSWORD du fichier .env
+- Nom d'utilisateur: variable ITEM_DB_POSTGRES_USER du fichier .env
+- Mot de passe: variable ITEM_DB_POSTGRES_PASSWORD du fichier .env
 
-## Prérequis
-Disposer de :
-- ``docker``
-- ``docker-compose``
 
-## Installation
+# Installation
 
-Déployer la configuration docker dans un répertoire :
+***Docker doit être installé sur la machine de déploiement***
+
+- Déployer la configuration docker dans un répertoire :
+*adapter /opt/pod/ avec l'emplacement souhaité où déployer l'application*
 
 ```bash
-
-# adaptez /opt/pod/ avec l'emplacement où vous souhaitez déployer l'application et cloner le projet
-
 git clone https://github.com/abes-esr/item-docker.git
 ```
-Configurer l'application depuis l'exemple du [fichier ``.env-dist``](./.env-dist) (ce fichier contient la liste des variables avec des explications et des exemples de valeurs) :
+
+- Configurer l'application depuis l'exemple du [fichier ``.env-dist``](./.env-dist) (Ce fichier contient la liste des variables, accompagnées d'explications et d'exemples de valeurs) :
 
 ```bash
 cp .env-dist .env
-# personnaliser alors le contenu du .env
 ```
-Démarrer l'application :
+- Ajouter les valeurs des variables dans le fichier .env
 
+- Démarrer l'application
 ```bash
 docker compose up -d
 ```
 
-Remarque : retirer le ``-d`` pour voir passer les logs dans le terminal et utiliser alors CTRL+C pour stopper l'application
+*Retirez l'option -d pour afficher les logs dans le terminal, puis utilisez CTRL+C pour arrêter l'application*
 
-Pour information, une base de données postgresql vide sera alors automatiquement initialisée. Ses données binaires seront placées dans le répertoire persistant suivante (attention le user unix de ce répertoire est celui du conteneur postgresql qui n'est pas le même que celui que vous utilisez pour installer l'application) : ``volumes/item-db/pgdata/``
+*Une base de données Postgresql vide sera alors automatiquement initialisée. Ses données binaires seront placées dans le répertoire persistant ``volumes/item-db/pgdata/``*
+
+- pour stopper l'application
 ```bash
-# pour stopper l'application
 docker-compose stop
-
-# pour redémarrer l'application
+```
+- pour redémarrer l'application
+```bash
 docker-compose restart
 ```
-## Supervision
 
+# Supervision
+
+- pour visualiser les logs de l'application
 ```bash
-# pour visualiser les logs de l'appli
 docker-compose logs -f --tail=100
-
-# pour visualiser les logs d'un containeur
-docker-compose logs -f --tail=100 nom_du_containeur
+```
+- pour visualiser les logs d'un container
+```bash
+docker-compose logs -f --tail=100 nom_du_container
 ```
 
-Cela va afficher les 100 dernière lignes de logs générées par l'application et toutes les suivantes jusqu'au CTRL+C qui stoppera l'affichage temps réel des logs.
+Ces commandes afficheront les 100 dernières lignes de logs générées par les conteneurs, ainsi que toutes les nouvelles lignes en temps réel, jusqu'à ce que la commande CTRL+C soit exécutée pour arrêter l'affichage.
 
-## Déploiement continu
+# Déploiement continu
 
-Les objectifs des déploiements continus de item sont les suivants (cf [poldev](https://github.com/abes-esr/abes-politique-developpement/blob/main/01-Gestion%20du%20code%20source.md#utilisation-des-branches)) :
+Les configurations pour Item sont les suivantes (cf [poldev](https://github.com/abes-esr/abes-politique-developpement/blob/main/01-Gestion%20du%20code%20source.md#utilisation-des-branches)) :
 - git push sur la branche ``develop`` provoque un déploiement automatique sur le serveur ``diplotaxis4-dev``
 - git push (le plus couramment merge) sur la branche ``main`` provoque un déploiement automatique sur le serveur ``diplotaxis4-test``
 - git tag X.X.X (associé à une release) sur la branche ``main`` permet un déploiement (non automatique) sur le serveur ``diplotaxis4-prod``
@@ -99,93 +101,121 @@ Item est déployé automatiquement en utilisant l'outil watchtower. Pour permett
 ```env
 ITEM_WATCHTOWER_RUN_ONCE=false
 ```
+Watchtower surveille la présence éventuelle de nouvelles images Docker pour item-api, item-client et item-batch. Si une nouvelle image est disponible, il la récupère, arrête les anciens conteneurs et crée les nouveaux conteneurs en réutilisant les mêmes paramètres que ceux des anciens conteneurs. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser Watchtower intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis4-dev.
 
-Le fonctionnement de watchtower est de surveiller régulièrement l'éventuelle présence d'une nouvelle image docker de ``item-api``, ``item-client`` et ``item-batch``, si oui, de récupérer l'image en question, de stopper le ou les les vieux conteneurs et de créer le ou les conteneurs correspondants en réutilisant les mêmes paramètres ceux des vieux conteneurs. Pour le développeur, il lui suffit de faire un git commit+push par exemple sur la branche ``develop`` d'attendre que la github action build et publie l'image, puis que watchtower prenne la main pour que la modification soit disponible sur l'environnement cible, par exemple la machine ``diplotaxis4-dev``.
+En définissant ITEM_WATCHTOWER_RUN_ONCE à false, Watchtower sera exécuté périodiquement (Par défaut, cette variable est réglée sur true pour plus de commodité lors des déploiements locaux).
 
-Le fait de passer ``ITEM_WATCHTOWER_RUN_ONCE`` à false va faire en sorte d'exécuter périodiquement watchtower. Par défaut cette variable est à ``true`` car ce n'est pas utile voir cela peut générer du bruit dans le cas d'un déploiement sur un PC en local.
+# Sauvegardes
 
-
-## Sauvegardes
-
-Les éléments suivants sont à sauvegarder:
-- ``.env`` : contient la configuration spécifique de notre déploiement. Il doit être restauré et non crée depuis le .env-dist qui est généré à partir de la commande git clone du depot ou git pull
-NOTE: à voir avec JGT pour un emplacement dédié pour la récupération d'un .env à jour.
-- ``volumes/item-db/dump/`` : contient les dumps quotidiens de la base de données postgresql de item : pour pourvoir afficher les sauvegardes sur le serveur : ``sudo ls -ll dump``
+Les éléments suivants sont sauvegardés par le service Infrastructure et Architecture Technique :
+- ``.env`` : il contient la configuration spécifique de notre déploiement. Il doit être restauré et non crée depuis le .env-dist qui est généré à partir de la commande git clone du depot ou git pull.
+- ``volumes/item-db/dump/`` : il contient les dumps quotidiens de la base de données postgresql de item : pour pourvoir afficher les sauvegardes sur le serveur : ``sudo ls -ll dump``
 
 Le répertoire suivant est à exclure des sauvegardes :
-- ``/opt/pod/item-docker/volumes/item-db/pgdata/`` : contient les données binaires de la base de données postgresql item
+- ``/opt/pod/item-docker/volumes/item-db/pgdata/`` : il contient les données binaires de la base de données Postgresql item
 
-L'heure journalière de sauvegarde:
-Aller éditer dans le fichier
-> docker-compose.yml
-situé chaque diplotaxis à l'emplacement
-> /opt/pod/item-docker
-elle est définie à travers l'image
-- item-db-dumper
-et son paramètre:
+Les dumps sont effectués à l'aide de https://github.com/tiredofit/docker-db-backup
+
+La configuration des dumps est définie dans le fichier docker-compose, au niveau de l'image item-db-dumper.
+Ainsi, l'heure de sauvegarde quotidienne est configurée via : 
+```bash
 DEFAULT_BACKUP_BEGIN: "0130"
-Cette valeur "0130" indique que la sauvegarde des dumps démarre tous les jours à 1h30 du matin, heure GMT.
+```
+Cette valeur "0130" indique que la sauvegarde des dumps commence chaque jour à 1h30 du matin, heure GMT.
 Le format utilisé est "HHmm", où :
 - "HH" représente les heures sur 2 chiffres (de 00 à 23)
 - "mm" représente les minutes sur 2 chiffres (de 00 à 59)
 
-Donc pour changer l'heure de sauvegarde, il vous suffit de modifier cette valeur en respectant ce format.
 
-### Restauration depuis une sauvegarde
+# Restauration depuis une sauvegarde
 
-- se connecter au diplotaxis cible
-- Se rendre dans le repertoire /opt/pod
-- git clone https://github.com/abes-esr/item-docker.git
-- récuperer le .env (s'adresser au SIAT)
-- le déposer dans le repertoire crée item-docker
-- lancer la construction des containers à partir des images avec : docker compose up -d
+- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
 
-Remarque : retirer le ``-d`` pour voir passer les logs dans le terminal et utiliser alors CTRL+C pour stopper l'application
-
-Pour information, une base de données postgresql vide sera alors automatiquement initialisée. Ses données binaires seront placées dans le répertoire persistant suivante (attention le user unix de ce répertoire est celui du conteneur postgresql qui n'est pas le même que celui que vous utilisez pour installer l'application) : ``volumes/item-db/pgdata/``
+- Se positionner dans le répertoire de l'application :
 ```bash
-# pour stopper l'application
-docker-compose stop
-
-# pour redémarrer l'application
-docker-compose restart
+cd /opt/pod/item-docker
 ```
-
-Restaurez ensuite le dernier dump de la base de données postgresql de item :
-- récupérer le dernier dump généré par ``item-db-dumper`` depuis le système de sauvegarde (le fichier dump ressemble à ceci ``pgsql_item_item-db_20220801-143201.sql.gz``) et placez le fichier dump récupéré (sans le décompresser) dans ``=volumes/item-db/dump/`` sur la machine qui doit faire repartir item
-- ensuite lancez uniquement les conteneurs ``item-db`` et ``item-db-dumper`` :
-   ```bash
-   docker-compose up -d item-db item-db-dumper
-   ```
-- lancez le script de restauration ``restore`` comme ceci et suivez les instructions :
-   ```bash
-   docker exec -it item-db-dumper restore
-   ```
-
-***Important : penser à supprimer le schema public de sa base de donnée et le recréer (avec un client sql), sinon la restoration échouera avec les contraintes de clés***
-
-   choisir sa backup, choisir P (Postgresql), choisir F (Parses Filename DB Name), choisir E (Environment Variable DB01_USER), choisir E (Environment Variable DB01_PASS), choisir D (postgresql : 5432)
-- C'est bon, la base de données item est alors restaurée
-
-Lancez alors toute l'application item et vérifiez qu'elle fonctionne bien :
+- Récupérer le projet item-docker : 
 ```bash
-docker-compose up -d
+git clone https://github.com/abes-esr/item-docker.git
 ```
+- Récupérer le .env depuis sotora (authentification nécessaire) : 
+```bash
+rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/.env /opt/pod/item-docker/.env
+```
+*Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
 
-### Mise à jour de la dernière version
+- Vérifier que les conteneurs sont arrêtés :
+```bash
+sudo docker compose down --remove-orphans	
+```
+- Redémarrer uniquement item-db et item-dumper : 
+```bash
+sudo docker compose up -d item-db item-db-dumper
+```
+*Ne pas redémarrer les containers item-batch ou item-api dont la couche JPA recrée la base de données automatiquement.*
 
-Pour récupérer et démarrer la dernière version de l'application vous pouvez le faire manuellement comme ceci :
+**Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis4-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis4-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
+
+- Choisir l'une des deux options suivantes : Restauration depuis diplotaxis4-prod ou Restauration depuis sotora
+
+## Restauration depuis diplotaxis4-prod
+
+- Supprimer le schéma, la base de données existante et recréer la base vide :
+```bash
+sudo docker exec -it item-db bash -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB -c "DROP SCHEMA public CASCADE;"'
+sudo docker exec -it item-db bash -c 'dropdb -f -U $POSTGRES_USER $POSTGRES_DB'
+sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
+```
+- Choisir l'une des deux options suivantes : Restauration du schéma et des données avec la sauvegarde la plus récente ou Restauration du schéma et des données avec une sauvegarde choisie
+
+### Restauration du schéma et des données avec la sauvegarde la plus récente
+```bash
+sudo docker exec -it item-db-dumper bash -c 'restore $(readlink -f /backup/latest-pgsql_item_item-db) $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'	
+```
+### Restauration du schéma et des données avec une sauvegarde choisie
+- Lister les sauvegardes disponibles : 
+```bash
+ll volumes/item-db/dump/
+```
+- Compléter la commande avec le nom de la base à restaurer, par exemple : 
+```bash
+sudo docker exec -it item-db-dumper bash -c 'restore /backup/pgsql_item_item-db_20250221-144114.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'
+```
+TODO : ajouter une astérisque pour expliciter comment fonctionne l'injection des variables
+
+## Restauration depuis sotora
+
+- Récupérer la sauvegarde depuis sotora : 
+```bash
+rsync -avL devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/volumes/item-db/dump/latest-pgsql_item_item-db /opt/pod/item-docker/volumes/item-db/dump/pgsql_item_item-db_sotora.sql.gz
+```
+*Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
+
+- Supprimer le schéma, la base de données existante et recréer la base vide : 
+```bash
+sudo docker exec -it item-db bash -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB -c "DROP SCHEMA public CASCADE;"'
+sudo docker exec -it item-db bash -c 'dropdb -f -U $POSTGRES_USER $POSTGRES_DB'
+sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
+```
+- Restaurer le schéma et les données : 
+```bash
+sudo docker exec -it item-db-dumper bash -c 'restore pgsql_item_item-db_sotora.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432' 
+```
+La restauration est terminée.
+
+# Mise à jour manuelle de la dernière version
+
+La récupération et le démarrage de la dernière version de l'application peuvent être réalisés ainsi : 
 ```bash
 docker-compose pull
 docker-compose up -d
 ```
-Le ``pull`` aura pour effet de télécharger l'éventuelle dernière images docker disponible pour la version glissante en cours (ex: ``develop-api`` ou ``main-api``). Sans le pull c'est la dernière image téléchargée qui sera utilisée.
+Le pull permet de télécharger la dernière image Docker disponible pour la version en cours (par exemple, develop-api ou main-api). Sans effectuer de pull, c'est la dernière image téléchargée qui sera utilisée.
 
-Ou bien [lancer le conteneur ``item-watchtower``](https://github.com/abes-esr/item-docker/blob/develop/README.md#d%C3%A9ploiement-continu) qui le fera automatiquement toutes les quelques secondes pour vous.
+# Paramétrage de l'heure du serveur pour les logs
 
-### Paramétrage de l'heure du serveur pour les logs
-
-Suivre les consignes ci-dessous pour obtenir la bonne heure dans le batch d'item et le web d'item
+Suivre les consignes ci-dessous pour obtenir un paramétrage correct de l'heure dans les containers batch et web d'Item
 
 ![Sans titre](https://github.com/abes-esr/item-docker/assets/19894885/41ab2653-bf63-4b94-bf70-09b309facbac)
 

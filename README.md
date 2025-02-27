@@ -61,7 +61,7 @@ cp .env-dist .env
 
 - Démarrer l'application
 ```bash
-docker compose up -d
+sudo docker compose up -d
 ```
 
 *Retirez l'option -d pour afficher les logs dans le terminal, puis utilisez CTRL+C pour arrêter l'application*
@@ -70,22 +70,22 @@ docker compose up -d
 
 - pour stopper l'application
 ```bash
-docker-compose stop
+sudo docker compose stop
 ```
 - pour redémarrer l'application
 ```bash
-docker-compose restart
+sudo docker compose restart
 ```
 
 # Supervision
 
 - pour visualiser les logs de l'application
 ```bash
-docker-compose logs -f --tail=100
+sudo docker compose logs -f --tail=100
 ```
 - pour visualiser les logs d'un container
 ```bash
-docker-compose logs -f --tail=100 nom_du_container
+sudo docker compose logs -f --tail=100 nom_du_container
 ```
 
 Ces commandes afficheront les 100 dernières lignes de logs générées par les conteneurs, ainsi que toutes les nouvelles lignes en temps réel, jusqu'à ce que la commande CTRL+C soit exécutée pour arrêter l'affichage.
@@ -129,27 +129,40 @@ Le format utilisé est "HHmm", où :
 
 # Restauration depuis une sauvegarde
 
+## Restauration de l'application
+
+
+
+- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
+
+- Se positionner dans le répertoire des applications :
+```bash
+cd /opt/pod
+```
+- Récupérer le projet item-docker :
+```bash
+git clone https://github.com/abes-esr/item-docker.git
+```
+- Récupérer le .env depuis sotora (authentification nécessaire) :
+```bash
+rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/.env /opt/pod/item-docker/.env
+```
+*Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
+
+## Restauration des donneés de l'application
+
 - Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
 
 - Se positionner dans le répertoire de l'application :
 ```bash
 cd /opt/pod/item-docker
 ```
-- Récupérer le projet item-docker : 
-```bash
-git clone https://github.com/abes-esr/item-docker.git
-```
-- Récupérer le .env depuis sotora (authentification nécessaire) : 
-```bash
-rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/.env /opt/pod/item-docker/.env
-```
-*Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
 
 - Vérifier que les conteneurs sont arrêtés :
 ```bash
 sudo docker compose down --remove-orphans	
 ```
-- Redémarrer uniquement item-db et item-dumper : 
+- Redémarrer uniquement item-db et item-db-dumper : 
 ```bash
 sudo docker compose up -d item-db item-db-dumper
 ```
@@ -161,7 +174,7 @@ sudo docker compose up -d item-db item-db-dumper
   - [Restauration depuis diplotaxis4-prod](#restauration-depuis-diplotaxis4-prod)
   - [Restauration depuis sotora](#restauration-depuis-sotora)
 
-## Restauration depuis diplotaxis4-prod
+### Restauration depuis diplotaxis4-prod
 
 - Supprimer le schéma, la base de données existante et recréer la base vide :
 ```bash
@@ -176,7 +189,7 @@ sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
   - [Restauration du schéma et des données avec la sauvegarde la plus récente](#restauration-du-schéma-et-des-données-avec-la-sauvegarde-la-plus-récente)
   - [Restauration du schéma et des données avec une sauvegarde choisie](#restauration-du-schéma-et-des-données-avec-une-sauvegarde-choisie)
 
-### Restauration du schéma et des données avec la sauvegarde la plus récente
+#### Restauration du schéma et des données avec la sauvegarde la plus récente
 ```bash
 sudo docker exec -it item-db-dumper bash -c 'restore $(readlink -f /backup/latest-pgsql_item_item-db) $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'	
 # 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
@@ -184,19 +197,19 @@ sudo docker exec -it item-db-dumper bash -c 'restore $(readlink -f /backup/lates
 # Pour utiliser le fichier de sauvegarde correct, 'readlink -f' permet de remplacer l'alias 'latest-pgsql_item_item-db'"
 # par son chemin absolu, nécessaire à la commande de restauration.
 ```
-### Restauration du schéma et des données avec une sauvegarde choisie
+#### Restauration du schéma et des données avec une sauvegarde choisie
 - Lister les sauvegardes disponibles : 
 ```bash
 ll volumes/item-db/dump/
 ```
-- Compléter la commande avec le nom de la base à restaurer, par exemple : 
+- Compléter la commande avec le nom de la sauvegarde à restaurer, par exemple : 
 ```bash
 sudo docker exec -it item-db-dumper bash -c 'restore /backup/pgsql_item_item-db_20250221-144114.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'
 # 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
 # du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
 ```
 
-## Restauration depuis sotora
+### Restauration depuis sotora
 
 - Récupérer la sauvegarde depuis sotora : 
 ```bash
@@ -220,12 +233,16 @@ sudo docker exec -it item-db-dumper bash -c 'restore pgsql_item_item-db_sotora.s
 ```
 La restauration est terminée.
 
+on peut maintenant lancer la commande suivante pour redémarrer l'application
+```bash
+sudo docker compose up -d
+```
 # Mise à jour manuelle de la dernière version
 
 La récupération et le démarrage de la dernière version de l'application peuvent être réalisés ainsi : 
 ```bash
-docker-compose pull
-docker-compose up -d
+sudo docker compose pull
+sudo docker compose up -d
 ```
 Le pull permet de télécharger la dernière image Docker disponible pour la version en cours (par exemple, develop-api ou main-api). Sans effectuer de pull, c'est la dernière image téléchargée qui sera utilisée.
 

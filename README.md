@@ -157,7 +157,7 @@ sudo docker compose up -d item-db item-db-dumper
 
 **Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis4-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis4-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
 
-- Choisir l'une des deux options suivantes : Restauration depuis diplotaxis4-prod ou Restauration depuis sotora
+- Choisir l'une des deux options suivantes : [Restauration depuis diplotaxis4-prod](#restauration-depuis-diplotaxis4-prod) ou [Restauration depuis sotora](#restauration-depuis-sotora)
 
 ## Restauration depuis diplotaxis4-prod
 
@@ -166,12 +166,19 @@ sudo docker compose up -d item-db item-db-dumper
 sudo docker exec -it item-db bash -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB -c "DROP SCHEMA public CASCADE;"'
 sudo docker exec -it item-db bash -c 'dropdb -f -U $POSTGRES_USER $POSTGRES_DB'
 sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
+# 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
+# du conteneur (POSTGRES_USER, POSTGRES_DB) par les commandes psql, dropdb et createdb.
+
 ```
-- Choisir l'une des deux options suivantes : Restauration du schéma et des données avec la sauvegarde la plus récente ou Restauration du schéma et des données avec une sauvegarde choisie
+- Choisir l'une des deux options suivantes : [Restauration du schéma et des données avec la sauvegarde la plus récente](#restauration-du-schéma-et-des-données-avec-la-sauvegarde-la-plus-récente) ou [Restauration du schéma et des données avec une sauvegarde choisie](#restauration-du-schéma-et-des-données-avec-une-sauvegarde-choisie)
 
 ### Restauration du schéma et des données avec la sauvegarde la plus récente
 ```bash
 sudo docker exec -it item-db-dumper bash -c 'restore $(readlink -f /backup/latest-pgsql_item_item-db) $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'	
+# 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
+# du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
+# Pour utiliser le fichier de sauvegarde correct, nous utilisons 'readlink -f' afin de remplacer l'alias 'latest-pgsql_item_item-db'
+# par son chemin absolu, nécessaire à la commande de restauration.
 ```
 ### Restauration du schéma et des données avec une sauvegarde choisie
 - Lister les sauvegardes disponibles : 
@@ -181,8 +188,9 @@ ll volumes/item-db/dump/
 - Compléter la commande avec le nom de la base à restaurer, par exemple : 
 ```bash
 sudo docker exec -it item-db-dumper bash -c 'restore /backup/pgsql_item_item-db_20250221-144114.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'
+# 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
+# du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
 ```
-TODO : ajouter une astérisque pour expliciter comment fonctionne l'injection des variables
 
 ## Restauration depuis sotora
 
@@ -197,10 +205,14 @@ rsync -avL devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racin
 sudo docker exec -it item-db bash -c 'psql -U $POSTGRES_USER -d $POSTGRES_DB -c "DROP SCHEMA public CASCADE;"'
 sudo docker exec -it item-db bash -c 'dropdb -f -U $POSTGRES_USER $POSTGRES_DB'
 sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
+# 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
+# du conteneur (POSTGRES_USER, POSTGRES_DB) par les commandes psql, dropdb et createdb.
 ```
 - Restaurer le schéma et les données : 
 ```bash
 sudo docker exec -it item-db-dumper bash -c 'restore pgsql_item_item-db_sotora.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432' 
+# 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
+# du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
 ```
 La restauration est terminée.
 

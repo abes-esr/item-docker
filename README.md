@@ -157,7 +157,9 @@ sudo docker compose up -d item-db item-db-dumper
 
 **Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis4-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis4-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
 
-- Choisir l'une des deux options suivantes : [Restauration depuis diplotaxis4-prod](#restauration-depuis-diplotaxis4-prod) ou [Restauration depuis sotora](#restauration-depuis-sotora)
+- Choisir l'une des deux options suivantes : 
+  - [Restauration depuis diplotaxis4-prod](#restauration-depuis-diplotaxis4-prod)
+  - [Restauration depuis sotora](#restauration-depuis-sotora)
 
 ## Restauration depuis diplotaxis4-prod
 
@@ -170,7 +172,9 @@ sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
 # du conteneur (POSTGRES_USER, POSTGRES_DB) par les commandes psql, dropdb et createdb.
 
 ```
-- Choisir l'une des deux options suivantes : [Restauration du schéma et des données avec la sauvegarde la plus récente](#restauration-du-schéma-et-des-données-avec-la-sauvegarde-la-plus-récente) ou [Restauration du schéma et des données avec une sauvegarde choisie](#restauration-du-schéma-et-des-données-avec-une-sauvegarde-choisie)
+- Choisir l'une des deux options suivantes : 
+  - [Restauration du schéma et des données avec la sauvegarde la plus récente](#restauration-du-schéma-et-des-données-avec-la-sauvegarde-la-plus-récente)
+  - [Restauration du schéma et des données avec une sauvegarde choisie](#restauration-du-schéma-et-des-données-avec-une-sauvegarde-choisie)
 
 ### Restauration du schéma et des données avec la sauvegarde la plus récente
 ```bash

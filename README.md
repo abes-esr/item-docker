@@ -181,7 +181,7 @@ sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
 sudo docker exec -it item-db-dumper bash -c 'restore $(readlink -f /backup/latest-pgsql_item_item-db) $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432'	
 # 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
 # du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
-# Pour utiliser le fichier de sauvegarde correct, nous utilisons 'readlink -f' afin de remplacer l'alias 'latest-pgsql_item_item-db'
+# Pour utiliser le fichier de sauvegarde correct, 'readlink -f' permet de remplacer l'alias 'latest-pgsql_item_item-db'"
 # par son chemin absolu, nécessaire à la commande de restauration.
 ```
 ### Restauration du schéma et des données avec une sauvegarde choisie

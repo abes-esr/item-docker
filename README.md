@@ -227,7 +227,7 @@ sudo docker exec -it item-db bash -c 'createdb -U $POSTGRES_USER $POSTGRES_DB'
 ```
 - Restaurer le schéma et les données : 
 ```bash
-sudo docker exec -it item-db-dumper bash -c 'restore pgsql_item_item-db_sotora.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432' 
+sudo docker exec -it item-db-dumper bash -c 'restore /backup/pgsql_item_item-db_sotora.sql.gz $DB_TYPE $DB_HOST $DB_NAME $DB_USER $DB_PASS 5432' 
 # 'bash -c' est utilisé pour permettre l'interprétation des variables d'environnement 
 # du conteneur (DB_TYPE, DB_HOST, DB_NAME, DB_USER, DB_PASS) par la commande restore.
 ```

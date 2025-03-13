@@ -149,7 +149,7 @@ rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine
 ```
 *Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
 
-## Restauration des donneés de l'application
+## Restauration des données de l'application
 
 - Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
 

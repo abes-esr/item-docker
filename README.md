@@ -9,33 +9,33 @@ Ce dépôt contient la configuration docker 🐳 pour déployer l'application It
 Les URLs correspondantes aux déploiements en local, dev, test et prod de item sont :
 
 - local :
-  - http://127.0.0.1:14080/ : URL interne de item-client
-  - http://127.0.0.1:14081/ : URL interne de item-api
-  - http://127.0.0.1:14082/ : URL interne de l'adminer
-  - http://127.0.0.1:14083/ : Port ouvert pour la gestion de la BDD avec un client SQL
+  - http://127.0.0.1:18080/ : URL interne de item-client
+  - http://127.0.0.1:18081/ : URL interne de item-api
+  - http://127.0.0.1:18082/ : URL interne de l'adminer
+  - http://127.0.0.1:18083/ : Port ouvert pour la gestion de la BDD avec un client SQL
 - dev :
-  - http://diplotaxis4-dev.v212.abes.fr:14080/ : URL interne de item-client
-  - http://diplotaxis4-dev.v212.abes.fr:14081/ : URL interne de item-api
-  - http://diplotaxis4-dev.v212.abes.fr:14082/ : URL interne de l'adminer
-  - http://diplotaxis4-dev.v212.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
+  - http://diplotaxis5-dev.v212.abes.fr:18080/ : URL interne de item-client
+  - http://diplotaxis5-dev.v212.abes.fr:18081/ : URL interne de item-api
+  - http://diplotaxis5-dev.v212.abes.fr:18082/ : URL interne de l'adminer
+  - http://diplotaxis5-dev.v212.abes.fr:18083/ : Port ouvert pour gérer la BDD du conteneur
 - test :
-  - http://diplotaxis4-test.v202.abes.fr:14080/ : URL interne de item-client
-  - http://diplotaxis4-test.v202.abes.fr:14081/ : URL interne de item-api
-  - http://diplotaxis4-test.v202.abes.fr:14082/ : URL interne de l'adminer
-  - http://diplotaxis4-test.v202.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
+  - http://diplotaxis5-test.v202.abes.fr:18080/ : URL interne de item-client
+  - http://diplotaxis5-test.v202.abes.fr:18081/ : URL interne de item-api
+  - http://diplotaxis5-test.v202.abes.fr:18082/ : URL interne de l'adminer
+  - http://diplotaxis5-test.v202.abes.fr:18083/ : Port ouvert pour gérer la BDD du conteneur
 - prod
-  - http://diplotaxis4-prod.v102.abes.fr:14080/ : URL interne de item-client
-  - http://diplotaxis4-prod.v102.abes.fr:14081/ : URL interne de item-api
-  - http://diplotaxis4-prod.v102.abes.fr:14082/ : URL interne de l'adminer
-  - http://diplotaxis4-prod.v102.abes.fr:14083/ : Port ouvert pour gérer la BDD du conteneur
+  - http://diplotaxis5-prod.v102.abes.fr:18080/ : URL interne de item-client
+  - http://diplotaxis5-prod.v102.abes.fr:18081/ : URL interne de item-api
+  - http://diplotaxis5-prod.v102.abes.fr:18082/ : URL interne de l'adminer
+  - http://diplotaxis5-prod.v102.abes.fr:18083/ : Port ouvert pour gérer la BDD du conteneur
  
-# Utilisation de DBeaver (client SQL) pour gérer les bases de données dans Item sur le port 14083
+# Utilisation de DBeaver (client SQL) pour gérer les bases de données dans Item sur le port 18083
 
-Le port 14083 est ouvert sur les environnements de développement, de test et de production afin de permettre la gestion des bases de données d'Item via un client SQL externe.
+Le port 18083 est ouvert sur les environnements de développement, de test et de production afin de permettre la gestion des bases de données d'Item via un client SQL externe.
 Par exemple, avec DBeaver, il est possible de créer une nouvelle connexion : 
 
-- Host: diplotaxis4-test.v202.abes.fr
-- Port: 14083
+- Host: diplotaxis5-test.v202.abes.fr
+- Port: 18083
 - Database: item
 - Nom d'utilisateur: variable ITEM_DB_POSTGRES_USER du fichier .env
 - Mot de passe: variable ITEM_DB_POSTGRES_PASSWORD du fichier .env
@@ -93,15 +93,15 @@ Ces commandes afficheront les 100 dernières lignes de logs générées par les 
 # Déploiement continu
 
 Les configurations pour Item sont les suivantes (cf [poldev](https://github.com/abes-esr/abes-politique-developpement/blob/main/01-Gestion%20du%20code%20source.md#utilisation-des-branches)) :
-- git push sur la branche ``develop`` provoque un déploiement automatique sur le serveur ``diplotaxis4-dev``
-- git push (le plus couramment merge) sur la branche ``main`` provoque un déploiement automatique sur le serveur ``diplotaxis4-test``
-- git tag X.X.X (associé à une release) sur la branche ``main`` permet un déploiement (non automatique) sur le serveur ``diplotaxis4-prod``
+- git push sur la branche ``develop`` provoque un déploiement automatique sur le serveur ``diplotaxis5-dev``
+- git push (le plus couramment merge) sur la branche ``main`` provoque un déploiement automatique sur le serveur ``diplotaxis5-test``
+- git tag X.X.X (associé à une release) sur la branche ``main`` permet un déploiement (non automatique) sur le serveur ``diplotaxis5-prod``
 
 Item est déployé automatiquement en utilisant l'outil watchtower. Pour permettre ce déploiement automatique avec watchtower, il suffit de positionner à ``false`` la variable suivante dans le .env:
 ```env
 ITEM_WATCHTOWER_RUN_ONCE=false
 ```
-Watchtower surveille la présence éventuelle de nouvelles images Docker pour item-api, item-client et item-batch. Si une nouvelle image est disponible, il la récupère, arrête les anciens conteneurs et crée les nouveaux conteneurs en réutilisant les mêmes paramètres que ceux des anciens conteneurs. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser Watchtower intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis4-dev.
+Watchtower surveille la présence éventuelle de nouvelles images Docker pour item-api, item-client et item-batch. Si une nouvelle image est disponible, il la récupère, arrête les anciens conteneurs et crée les nouveaux conteneurs en réutilisant les mêmes paramètres que ceux des anciens conteneurs. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser Watchtower intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis5-dev.
 
 En définissant ITEM_WATCHTOWER_RUN_ONCE à false, Watchtower sera exécuté périodiquement (Par défaut, cette variable est réglée sur true pour plus de commodité lors des déploiements locaux).
 
@@ -133,7 +133,7 @@ Le format utilisé est "HHmm", où :
 
 
 
-- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
+- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis5-prod (via Putty etc.)
 
 - Se positionner dans le répertoire des applications :
 ```bash
@@ -145,13 +145,13 @@ git clone https://github.com/abes-esr/item-docker.git
 ```
 - Récupérer le .env depuis sotora (authentification nécessaire) :
 ```bash
-rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/.env /opt/pod/item-docker/.env
+rsync -av devel@sotora.v104.abes.fr:/backup_pool/diplotaxis5-prod/daily.0/racine/opt/pod/item-docker/.env /opt/pod/item-docker/.env
 ```
 *Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
 
 ## Restauration des données de l'application
 
-- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis4-prod (via Putty etc.)
+- Se Connecter avec son compte développeur sur la machine de déploiement diplotaxis5-prod (via Putty etc.)
 
 - Se positionner dans le répertoire de l'application :
 ```bash
@@ -168,13 +168,13 @@ sudo docker compose up -d item-db item-db-dumper
 ```
 *Ne pas redémarrer les containers item-batch ou item-api dont la couche JPA recrée la base de données automatiquement.*
 
-**Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis4-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis4-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
+**Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis5-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis5-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
 
 - Choisir l'une des deux options suivantes : 
-  - [Restauration depuis diplotaxis4-prod](#restauration-depuis-diplotaxis4-prod)
+  - [Restauration depuis diplotaxis5-prod](#restauration-depuis-diplotaxis5-prod)
   - [Restauration depuis sotora](#restauration-depuis-sotora)
 
-### Restauration depuis diplotaxis4-prod
+### Restauration depuis diplotaxis5-prod
 
 - Supprimer le schéma, la base de données existante et recréer la base vide :
 ```bash
@@ -213,7 +213,7 @@ sudo docker exec -it item-db-dumper bash -c 'restore /backup/pgsql_item_item-db_
 
 - Récupérer la sauvegarde depuis sotora : 
 ```bash
-rsync -avL devel@sotora.v104.abes.fr:/backup_pool/diplotaxis4-prod/daily.0/racine/opt/pod/item-docker/volumes/item-db/dump/latest-pgsql_item_item-db /opt/pod/item-docker/volumes/item-db/dump/pgsql_item_item-db_sotora.sql.gz
+rsync -avL devel@sotora.v104.abes.fr:/backup_pool/diplotaxis5-prod/daily.0/racine/opt/pod/item-docker/volumes/item-db/dump/latest-pgsql_item_item-db /opt/pod/item-docker/volumes/item-db/dump/pgsql_item_item-db_sotora.sql.gz
 ```
 *Pour sélectionner une sauvegarde autre que la plus récente, il suffit de remplacer daily.0 dans la commande par le jour souhaité (daily.1 pour la veille, daily.2 pour l'avant-veille, etc.)*
 
@@ -245,10 +245,3 @@ sudo docker compose pull
 sudo docker compose up -d
 ```
 Le pull permet de télécharger la dernière image Docker disponible pour la version en cours (par exemple, develop-api ou main-api). Sans effectuer de pull, c'est la dernière image téléchargée qui sera utilisée.
-
-# Paramétrage de l'heure du serveur pour les logs
-
-Suivre les consignes ci-dessous pour obtenir un paramétrage correct de l'heure dans les containers batch et web d'Item
-
-![Sans titre](https://github.com/abes-esr/item-docker/assets/19894885/41ab2653-bf63-4b94-bf70-09b309facbac)
-

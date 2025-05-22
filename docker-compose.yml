@@ -153,7 +153,10 @@ services:
   # item-db
   # Base de données postgresql de item
   item-db:
-    image: abesesr/postgres-fr_fr:15.1.0
+    image: abesesr/postgres-fr_fr:17.4.0
+    # pour les montées de version -> demander au siat la suppression du repertoire ./volumes/item-db/pgdata
+    # supprimer avec docker compose down -v, re-up avec sudo docker compose up -d item-db item-db-dumper
+    # lancer la procédure de restauration des données du dumper
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
@@ -187,8 +190,8 @@ services:
   #################################
   # item-db-adminer
   # Interface d'admin de postgresql
-  item-db-adminer:
-    image: adminer:4.8.1
+  item-db-adminer:5.3.0
+    image: adminer:
     container_name: item-db-adminer
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}

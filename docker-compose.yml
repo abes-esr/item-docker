@@ -153,7 +153,10 @@ services:
   # item-db
   # Base de données postgresql de item
   item-db:
-    image: abesesr/postgres-fr_fr:15.1.0
+    image: abesesr/postgres-fr_fr:17.4.0
+    # pour les montées de version -> demander au siat la suppression du repertoire ./volumes/item-db/pgdata
+    # supprimer avec docker compose down -v, re-up avec sudo docker compose up -d item-db item-db-dumper
+    # lancer la procédure de restauration des données du dumper
     container_name: item-db
     restart: unless-stopped
     mem_limit: ${MEM_LIMIT}
@@ -187,8 +190,8 @@ services:
   #################################
   # item-db-adminer
   # Interface d'admin de postgresql
-  item-db-adminer:
-    image: adminer:4.8.1
+  item-db-adminer:5.3.0
+    image: adminer:
     container_name: item-db-adminer
     mem_limit: ${MEM_LIMIT}
     cpus: ${CPU_LIMIT}
@@ -224,16 +227,19 @@ services:
     depends_on:
       - item-db
     environment:
-      # DB_DUMP_BEGIN: "0130" <= tous les jours à 1h30 du matin GMT
-      # DB_DUMP_FREQ: 1440 <= chaque jour
-      # DB_CLEANUP_TIME: 10080 (1440*7) <= conserve uniquement les 7 derniers jours
+
+
+
       DB_TYPE: "pgsql"
       DB_HOST: "item-db"
       DB_NAME: "item"
       DB_USER: ${ITEM_DB_POSTGRES_USER}
       DB_PASS: ${ITEM_DB_POSTGRES_PASSWORD}
+      # "0130" <= tous les jours à 1h30 du matin GMT
       DEFAULT_BACKUP_BEGIN: "0130"
+      # 1440 <= chaque jour
       DEFAULT_BACKUP_INTERVAL: 1440
+      # 10080 (1440*7) <= conserve uniquement les 7 derniers jours
       DEFAULT_CLEANUP_TIME: 10080
       DEFAULT_COMPRESSION: "GZ"
       DEBUG_MODE: "false"

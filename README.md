@@ -40,6 +40,9 @@ Par exemple, avec DBeaver, il est possible de créer une nouvelle connexion :
 - Nom d'utilisateur: variable ITEM_DB_POSTGRES_USER du fichier .env
 - Mot de passe: variable ITEM_DB_POSTGRES_PASSWORD du fichier .env
 
+# URL de consultation des logs avec dozzle
+
+http://diplotaxis5-dev.v212.abes.fr:29999
 
 # Installation
 

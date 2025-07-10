@@ -171,6 +171,8 @@ sudo docker compose up -d item-db item-db-dumper
 ```
 *Ne pas redémarrer les containers item-batch ou item-api dont la couche JPA recrée la base de données automatiquement.*
 
+Attention: recréer à la main /opt/pod/item-docker/volumes/item-db/dump via winiscp ou la ligne de commande pour bénéficier des droits qui permetteront de glisser déposer les sauvegardes
+
 **Les sept dernières sauvegardes sont conservées et accessibles sur la machine diplotaxis5-prod, qui est également sauvegardée sur la machine sotora. Ainsi, la restauration de la base peut se faire soit directement à partir des sauvegardes de diplotaxis5-prod, soit, en cas d'indisponibilité ou pour des sauvegardes plus anciennes que 7 jours, depuis sotora.**
 
 - Choisir l'une des deux options suivantes : 

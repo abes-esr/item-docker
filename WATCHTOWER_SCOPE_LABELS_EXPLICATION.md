@@ -1,20 +1,18 @@
-# Watchtower: scope vs enable
+# Watchtower: scope et labels enable
 
-Cette note explique le comportement quand `WATCHTOWER_SCOPE` et `WATCHTOWER_LABEL_ENABLE=true` sont utilisés ensemble.
+Cette note explique la configuration actuelle utilisée dans ce dépôt.
 
 ## Ce que fait `WATCHTOWER_SCOPE`
 
 - Le scope (`item-watchtower-scope`) définit le périmètre de conteneurs que cette instance watchtower peut considérer.
 - Un conteneur hors scope est ignoré.
 
-## Ce que fait `WATCHTOWER_LABEL_ENABLE=true`
+## Ce que fait le label `com.centurylinklabs.watchtower.enable`
 
-- Ce mode active une logique "opt-in".
-- Dans le scope, watchtower ne met à jour automatiquement que les conteneurs avec:
-  - `com.centurylinklabs.watchtower.enable=true`
-- Les conteneurs marqués `enable=false` (ou sans label `enable=true`) ne sont pas auto-mis à jour.
+- Dans la configuration actuelle, `WATCHTOWER_LABEL_ENABLE` n'est pas activé.
+- Le label `com.centurylinklabs.watchtower.enable=false` est utilisé pour exclure explicitement certains services.
 
-## Implication pour les services exclus
+## Implication pour les services BDD exclus
 
 Pour `item-db`, `item-db-adminer`, `item-db-dumper` (et `item-watchtower`), marqués `enable=false`:
 
@@ -25,4 +23,4 @@ Pour `item-db`, `item-db-adminer`, `item-db-dumper` (et `item-watchtower`), marq
 ## Résumé
 
 - `scope` = quels conteneurs sont visibles par watchtower.
-- `enable=true/false` = parmi ceux visibles, lesquels sont autorisés à l'auto-update.
+- `enable=false` = conteneurs explicitement exclus de l'auto-update.

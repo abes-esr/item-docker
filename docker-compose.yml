@@ -41,6 +41,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 
 
@@ -95,6 +96,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 
   item-batch:
@@ -146,6 +148,7 @@ services:
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
       # pour que les mises à jour de cette image soient auto-déployées par watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=true"
 
 
 
@@ -183,8 +186,9 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      # exclut la base de données des mises à jour automatiques watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=false"
 
 
   #################################
@@ -205,8 +209,9 @@ services:
     logging:
       driver: none # pas de log pour adminer pour ne pas polluer
     labels:
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      # exclut adminer des mises à jour automatiques watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=false"
 
 
 
@@ -263,8 +268,9 @@ services:
       - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
       - "co.elastic.logs/multiline.negate=true"
       - "co.elastic.logs/multiline.match=after"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
+      # exclut le dumper des mises à jour automatiques watchtower
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=false"
 
 
 
@@ -294,10 +300,12 @@ services:
       WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: ${ITEM_WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER}
       WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notif-item"
       WATCHTOWER_SCOPE: "item-watchtower-scope"
+      WATCHTOWER_LABEL_ENABLE: "true"
       REPO_USER: ${ITEM_WATCHTOWER_DOCKERHUB_USER}
       REPO_PASS: ${ITEM_WATCHTOWER_DOCKERHUB_PASS}
     labels:
       - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      - "com.centurylinklabs.watchtower.enable=false"
 
 
 

@@ -39,8 +39,9 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=nginx"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      # pour que les mises à jour de cette image soient auto-déployées par WUD
+      - "wud.watch=true"
+      - "wud.watch.digest=true"
 
 
 
@@ -93,8 +94,9 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      # pour que les mises à jour de cette image soient auto-déployées par WUD
+      - "wud.watch=true"
+      - "wud.watch.digest=true"
 
 
   item-batch:
@@ -144,8 +146,9 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=java-spring"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
+      # pour que les mises à jour de cette image soient auto-déployées par WUD
+      - "wud.watch=true"
+      - "wud.watch.digest=true"
 
 
 
@@ -183,8 +186,6 @@ services:
       - "co.elastic.logs/processors.add_fields.target="
       - "co.elastic.logs/processors.add_fields.fields.abes_appli=item"
       - "co.elastic.logs/processors.add_fields.fields.abes_middleware=postgresql"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
   #################################
@@ -204,9 +205,6 @@ services:
       ADMINER_DEFAULT_SERVER: "item-db"
     logging:
       driver: none # pas de log pour adminer pour ne pas polluer
-    labels:
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
 
 
 
@@ -263,41 +261,3 @@ services:
       - "co.elastic.logs/multiline.pattern='^.*Dumping PostgresSQL database'"
       - "co.elastic.logs/multiline.negate=true"
       - "co.elastic.logs/multiline.match=after"
-      # pour que les mises à jour de cette image soient auto-déployées par watchtower
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
-
-
-
-  #######################################
-  # item-watchtower
-  # Conteneur chargé de mettre à jour automatiquement toutes les N secondes
-  # les images docker des conteneurs surveillés (via le système de label/scope de watchtower)
-  # plus d'info : https://containrrr.dev/watchtower
-  # cf README.md pour explications : https://github.com/abes-esr/item-docker#d%C3%A9ploiement-continu
-  item-watchtower:
-    image: nickfedor/watchtower:1.14.1
-    container_name: item-watchtower
-    restart: unless-stopped
-    mem_limit: ${MEM_LIMIT}
-    cpus: ${CPU_LIMIT}
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    environment:
-      WATCHTOWER_CLEANUP: "true"
-      WATCHTOWER_POLL_INTERVAL: 60
-      WATCHTOWER_DEBUG: "false"
-      WATCHTOWER_NO_STARTUP_MESSAGE: "true"
-      WATCHTOWER_WARN_ON_HEAD_FAILURE: "never"
-      WATCHTOWER_RUN_ONCE: ${ITEM_WATCHTOWER_RUN_ONCE}
-      WATCHTOWER_NOTIFICATIONS: "slack"
-      WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL: ${ITEM_WATCHTOWER_NOTIFICATION_SLACK_HOOK_URL}
-      WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER: ${ITEM_WATCHTOWER_NOTIFICATION_SLACK_IDENTIFIER}
-      WATCHTOWER_NOTIFICATION_SLACK_CHANNEL: "#notif-item"
-      WATCHTOWER_SCOPE: "item-watchtower-scope"
-      REPO_USER: ${ITEM_WATCHTOWER_DOCKERHUB_USER}
-      REPO_PASS: ${ITEM_WATCHTOWER_DOCKERHUB_PASS}
-    labels:
-      - "com.centurylinklabs.watchtower.scope=item-watchtower-scope"
-
-
-

@@ -100,7 +100,9 @@ Les configurations pour Item sont les suivantes (cf [poldev](https://github.com/
 - git push (le plus couramment merge) sur la branche ``main`` provoque un déploiement automatique sur le serveur ``diplotaxis5-test``
 - git tag X.X.X (associé à une release) sur la branche ``main`` permet un déploiement (non automatique) sur le serveur ``diplotaxis5-prod``
 
-Item est déployé automatiquement en utilisant l'outil WUD (What's Up Docker). WUD surveille la présence éventuelle de nouvelles images Docker pour item-front, item-api et item-batch grâce aux labels ``wud.watch=true`` et ``wud.watch.digest=true`` déclarés dans le ``docker-compose.yml``.
+Item est déployé automatiquement via une instance WUD (What's Up Docker) mutualisée, gérée hors de ce fichier docker-compose. Ce dépôt expose uniquement les labels WUD nécessaires sur les conteneurs applicatifs à surveiller : item-front, item-api et item-batch.
+
+WUD surveille la présence éventuelle de nouvelles images Docker grâce aux labels ``wud.watch=true`` et ``wud.watch.digest=true`` déclarés dans le ``docker-compose.yml``.
 
 Si une nouvelle image est disponible, WUD déclenche la mise à jour du conteneur concerné. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser WUD intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis5-dev.
 

@@ -100,13 +100,11 @@ Les configurations pour Item sont les suivantes (cf [poldev](https://github.com/
 - git push (le plus couramment merge) sur la branche ``main`` provoque un déploiement automatique sur le serveur ``diplotaxis5-test``
 - git tag X.X.X (associé à une release) sur la branche ``main`` permet un déploiement (non automatique) sur le serveur ``diplotaxis5-prod``
 
-Item est déployé automatiquement en utilisant l'outil watchtower. Pour permettre ce déploiement automatique avec watchtower, il suffit de positionner à ``false`` la variable suivante dans le .env:
-```env
-ITEM_WATCHTOWER_RUN_ONCE=false
-```
-Watchtower surveille la présence éventuelle de nouvelles images Docker pour item-api, item-client et item-batch. Si une nouvelle image est disponible, il la récupère, arrête les anciens conteneurs et crée les nouveaux conteneurs en réutilisant les mêmes paramètres que ceux des anciens conteneurs. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser Watchtower intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis5-dev.
+Item est déployé automatiquement via une instance WUD (What's Up Docker) mutualisée, gérée hors de ce fichier docker-compose. Ce dépôt expose uniquement les labels WUD nécessaires sur les conteneurs applicatifs à surveiller : item-front, item-api et item-batch.
 
-En définissant ITEM_WATCHTOWER_RUN_ONCE à false, Watchtower sera exécuté périodiquement (Par défaut, cette variable est réglée sur true pour plus de commodité lors des déploiements locaux).
+WUD surveille la présence éventuelle de nouvelles images Docker grâce aux labels ``wud.watch=true`` et ``wud.watch.digest=true`` déclarés dans le ``docker-compose.yml``.
+
+Si une nouvelle image est disponible, WUD déclenche la mise à jour du conteneur concerné. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser WUD intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis5-dev.
 
 # Sauvegardes
 

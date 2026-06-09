@@ -102,9 +102,22 @@ Les configurations pour Item sont les suivantes (cf [poldev](https://github.com/
 
 Item est déployé automatiquement via une instance WUD (What's Up Docker) mutualisée, gérée hors de ce fichier docker-compose. Ce dépôt expose uniquement les labels WUD nécessaires sur les conteneurs applicatifs à surveiller : item-front, item-api et item-batch.
 
-WUD surveille la présence éventuelle de nouvelles images Docker grâce aux labels ``wud.watch=true`` et ``wud.watch.digest=true`` déclarés dans le ``docker-compose.yml``.
+WUD ne lance pas les GitHub Actions. Le fonctionnement est le suivant :
+- la GitHub Action du dépôt source construit l'image Docker et la publie sur DockerHub avec le tag attendu ;
+- WUD scanne DockerHub selon son cron ;
+- si le digest DockerHub du tag surveillé a changé, WUD télécharge l'image, recrée puis redémarre le conteneur concerné.
 
-Si une nouvelle image est disponible, WUD déclenche la mise à jour du conteneur concerné. Pour le développeur, il suffit de faire un git commit + push sur la branche develop, d'attendre que l'action GitHub construise et publie l'image, puis de laisser WUD intervenir pour que la modification soit déployée sur l'environnement cible, comme par exemple la machine diplotaxis5-dev.
+Les conteneurs Item sont surveillés grâce aux labels ``wud.watch=true`` et ``wud.watch.digest=true`` déclarés dans le ``docker-compose.yml``. Le label ``wud.watch.digest=true`` est important pour les tags mutables comme ``develop-api``, ``develop-batch`` ou ``develop-front`` : le nom du tag ne change pas, mais son digest DockerHub change à chaque nouvelle publication.
+
+La fréquence de passage de WUD dépend du cron configuré sur l'instance WUD mutualisée :
+- configuration constatée : ``5 * * * *`` ; WUD scanne à la minute 5 de chaque heure, par exemple 13:05, 14:05, 15:05 ;
+- configuration cible prévue par l'équipe DevOps : ``*/5 * * * *`` ; WUD scannera toutes les 5 minutes.
+
+Pour publier une image consommable par WUD, lancer la GitHub Action ``wud-build-pubtodockerhub.yml`` dans le dépôt source concerné :
+- ``item-client`` : publie l'image front, par exemple ``abesesr/item:develop-front`` depuis la branche ``develop`` ;
+- ``item-api`` : publie les images API et batch, par exemple ``abesesr/item:develop-api`` et ``abesesr/item:develop-batch`` depuis la branche ``develop``.
+
+Une fois l'action GitHub terminée, WUD prendra en compte la nouvelle image au prochain passage de son cron. En cas de besoin d'application immédiate, un scan WUD manuel peut être déclenché par l'exploitation via l'API WUD, mais ce n'est pas le fonctionnement nominal.
 
 # Sauvegardes
 
